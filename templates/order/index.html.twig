@@ -11,8 +11,8 @@
                 <th>Id</th>
                 <th>BasePrice</th>
                 <th>AdditionalPrice</th>
-                <th>DriversRating</th>
-                <th>PasangerRating</th>
+                <th>DriverRating</th>
+                <th>PassengerRating</th>
                 <th>actions</th>
             </tr>
         </thead>
@@ -22,8 +22,8 @@
                 <td>{{ order.id }}</td>
                 <td>{{ order.basePrice }}</td>
                 <td>{{ order.additionalPrice }}</td>
-                <td>{{ order.driversRating }}</td>
-                <td>{{ order.pasangerRating }}</td>
+                <td>{{ order.driverRating }}</td>
+                <td>{{ order.passengerRating }}</td>
                 <td>
                     <a href="{{ path('order_show', {'id': order.id}) }}">show</a>
                     <a href="{{ path('order_edit', {'id': order.id}) }}">edit</a>
