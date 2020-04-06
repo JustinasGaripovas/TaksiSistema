@@ -13,7 +13,7 @@ class DriverType extends AbstractType
     {
         $builder
             ->add('driverId')
-            ->add('averageRaiting')
+            ->add('averageRating')
             ->add('completeOrderCount')
             ->add('unfinishedOrderCount')
             ->add('user')

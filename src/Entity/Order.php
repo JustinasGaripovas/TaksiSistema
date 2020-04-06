@@ -30,12 +30,12 @@ class Order
     /**
      * @ORM\Column(type="integer", nullable=true)
      */
-    private $driversRating;
+    private $driverRating;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
      */
-    private $passengersRating;
+    private $passengerRating;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Driver", inversedBy="orders")
@@ -72,26 +72,26 @@ class Order
         return $this;
     }
 
-    public function getDriversRating(): ?int
+    public function getDriverRating(): ?int
     {
-        return $this->driversRating;
+        return $this->driverRating;
     }
 
-    public function setDriversRating(?int $driversRating): self
+    public function setDriverRating(?int $driverRating): self
     {
-        $this->driversRating = $driversRating;
+        $this->driverRating = $driverRating;
 
         return $this;
     }
 
-    public function getPassengersRating(): ?int
+    public function getPassengerRating(): ?int
     {
-        return $this->passengersRating;
+        return $this->passengerRating;
     }
 
-    public function setPassengersRating(?int $passengersRating): self
+    public function setPassengerRating(?int $passengerRating): self
     {
-        $this->passengersRating = $passengersRating;
+        $this->passengerRating = $passengerRating;
 
         return $this;
     }

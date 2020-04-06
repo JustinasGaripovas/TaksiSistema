@@ -15,7 +15,7 @@ class OrderType extends AbstractType
             ->add('basePrice')
             ->add('additionalPrice')
             ->add('driversRating')
-            ->add('pasangerRating')
+            ->add('passengerRating')
             ->add('driver')
         ;
     }
