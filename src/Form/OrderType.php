@@ -18,8 +18,10 @@ class OrderType extends AbstractType
             ->add('driverRating')
             ->add('passengerRating')
             ->add('driver')
-            ->add('latCoordinate', HiddenType::class)
-            ->add('lngCoordinate',HiddenType::class)
+            ->add('latCoordinateStart', HiddenType::class)
+            ->add('lngCoordinateStart',HiddenType::class)
+            ->add('latCoordinateDestination', HiddenType::class)
+            ->add('lngCoordinateDestination',HiddenType::class)
         ;
     }
 

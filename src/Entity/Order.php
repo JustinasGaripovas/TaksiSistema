@@ -46,12 +46,22 @@ class Order
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $latCoordinate;
+    private $latCoordinateStart;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $lngCoordinate;
+    private $lngCoordinateStart;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $latCoordinateDestination;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $lngCoordinateDestination;
 
     public function getId(): ?int
     {
@@ -118,26 +128,50 @@ class Order
         return $this;
     }
 
-    public function getLatCoordinate(): ?string
+    public function getLatCoordinateStart(): ?string
     {
-        return $this->latCoordinate;
+        return $this->latCoordinateStart;
     }
 
-    public function setLatCoordinate(?string $latCoordinate): self
+    public function setLatCoordinateStart(?string $latCoordinateStart): self
     {
-        $this->latCoordinate = $latCoordinate;
+        $this->latCoordinateStart = $latCoordinateStart;
 
         return $this;
     }
 
-    public function getLngCoordinate(): ?string
+    public function getLngCoordinateStart(): ?string
     {
-        return $this->lngCoordinate;
+        return $this->lngCoordinateStart;
     }
 
-    public function setLngCoordinate(string $lngCoordinate): self
+    public function setLngCoordinateStart(string $lngCoordinateStart): self
     {
-        $this->lngCoordinate = $lngCoordinate;
+        $this->lngCoordinateStart = $lngCoordinateStart;
+
+        return $this;
+    }
+
+    public function getLatCoordinateDestination(): ?string
+    {
+        return $this->latCoordinateDestination;
+    }
+
+    public function setLatCoordinateDestination(?string $latCoordinateDestination): self
+    {
+        $this->latCoordinateDestination = $latCoordinateDestination;
+
+        return $this;
+    }
+
+    public function getLngCoordinateDestination(): ?string
+    {
+        return $this->lngCoordinateDestination;
+    }
+
+    public function setLngCoordinateDestination(?string $lngCoordinateDestination): self
+    {
+        $this->lngCoordinateDestination = $lngCoordinateDestination;
 
         return $this;
     }
