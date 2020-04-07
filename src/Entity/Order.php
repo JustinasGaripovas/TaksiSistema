@@ -49,9 +49,9 @@ class Order
     private $latCoordinate;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $lngCordinate;
+    private $lngCoordinate;
 
     public function getId(): ?int
     {
@@ -130,14 +130,14 @@ class Order
         return $this;
     }
 
-    public function getLngCordinate(): ?string
+    public function getLngCoordinate(): ?string
     {
-        return $this->lngCordinate;
+        return $this->lngCoordinate;
     }
 
-    public function setLngCordinate(string $lngCordinate): self
+    public function setLngCoordinate(string $lngCoordinate): self
     {
-        $this->lngCordinate = $lngCordinate;
+        $this->lngCoordinate = $lngCoordinate;
 
         return $this;
     }
