@@ -43,6 +43,16 @@ class Order
      */
     private $driver;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $latCoordinate;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $lngCordinate;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -104,6 +114,30 @@ class Order
     public function setDriver(?Driver $driver): self
     {
         $this->driver = $driver;
+
+        return $this;
+    }
+
+    public function getLatCoordinate(): ?string
+    {
+        return $this->latCoordinate;
+    }
+
+    public function setLatCoordinate(?string $latCoordinate): self
+    {
+        $this->latCoordinate = $latCoordinate;
+
+        return $this;
+    }
+
+    public function getLngCordinate(): ?string
+    {
+        return $this->lngCordinate;
+    }
+
+    public function setLngCordinate(string $lngCordinate): self
+    {
+        $this->lngCordinate = $lngCordinate;
 
         return $this;
     }
