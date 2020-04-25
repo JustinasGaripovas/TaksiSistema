@@ -38,8 +38,8 @@ class Order
     private $passengerRating;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Driver", inversedBy="orders")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\ManyToOne(targetEntity="App\Entity\Driver", inversedBy="orders", cascade={"persist"})
+     * @ORM\JoinColumn(nullable=true)
      */
     private $driver;
 
@@ -62,6 +62,11 @@ class Order
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $lngCoordinateDestination;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $status;
 
     public function getId(): ?int
     {
@@ -174,5 +179,21 @@ class Order
         $this->lngCoordinateDestination = $lngCoordinateDestination;
 
         return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param int $status
+     */
+    public function setStatus(int $status): void
+    {
+        $this->status = $status;
     }
 }

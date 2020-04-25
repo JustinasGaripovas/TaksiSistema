@@ -1,54 +1,83 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Order{% endblock %}
+{% block title %}Current order{% endblock %}
+
+{% block stylesheets %}
+    <style>
+        .form-group {
+            margin-top: 20px;
+        }
+
+        input, select {
+            display: block;
+        }
+
+        button {
+            padding: 5px 10px;
+            background: transparent;
+            border: 1px solid #333;
+            color: #333;
+
+        }
+    </style>
+
+{% endblock %}
 
 {% block body %}
-    <h1>Order</h1>
+    <div id="new-order-container" class="container">
+        <div class="map" id="area-map"></div>
+        <div id="content" class="content-container">
+            <button onclick="alert('End journey')">End journey</button>
+            <a href="{{ path('order_index') }}">back to list</a>
+        </div>
+    </div>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ order.id }}</td>
-            </tr>
-            <tr>
-                <th>BasePrice</th>
-                <td>{{ order.basePrice }}</td>
-            </tr>
-            <tr>
-                <th>AdditionalPrice</th>
-                <td>{{ order.additionalPrice }}</td>
-            </tr>
-            <tr>
-                <th>DriverRating</th>
-                <td>{{ order.driverRating }}</td>
-            </tr>
-            <tr>
-                <th>PassengerRating</th>
-                <td>{{ order.passengerRating }}</td>
-            </tr>
-            <tr>
-                <th>LatCoordinatesStart</th>
-                <td>{{ order.latCoordinateStart }}</td>
-            </tr>
-            <tr>
-                <th>LngCoordinatesStart</th>
-                <td>{{ order.lngCoordinateStart }}</td>
-            </tr>
-            <tr>
-                <th>LatCoordinatesDestination</th>
-                <td>{{ order.latCoordinateDestination }}</td>
-            </tr>
-            <tr>
-                <th>LngCoordinatesDestination</th>
-                <td>{{ order.lngCoordinateDestination }}</td>
-            </tr>
-        </tbody>
-    </table>
+    <script>
+        const container = document.getElementById("content")
+        const newOrderContainer = document.getElementById("new-order-container")
+        const mapArea = document.getElementById("area-map")
 
-    <a href="{{ path('order_index') }}">back to list</a>
+        container.addEventListener("click", () => {
+            newOrderContainer.classList.add("active")
+        })
 
-    <a href="{{ path('order_edit', {'id': order.id}) }}">edit</a>
+        mapArea.addEventListener("click", () => {
+            newOrderContainer.classList.remove("active")
+        })
 
-    {{ include('order/_delete_form.html.twig') }}
+        const map = L.map('area-map').setView([54.903914, 23.958851], 13);
+
+        L.tileLayer(
+            "https://api.maptiler.com/maps/basic/{z}/{x}/{y}.png?key=ltrALA6k9d2bkEeRn8Fn",
+            {
+                attribution:
+                    '<a href="https://www.maptiler.com/copyright/" target="_blank">© MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">© OpenStreetMap contributors</a>'
+            }
+        ).addTo(map);
+
+        const mySvgString = '<svg class="pulse-svg" width="50px" height="50px" viewBox="0 0 50 50" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><circle class="circle first-circle" fill="#FF6347" cx="25" cy="25" r="25"></circle><circle class="circle second-circle" fill="#FF6347" cx="25" cy="25" r="25"></circle><circle class="circle third-circle" fill="#FF6347" cx="25" cy="25" r="25"></circle><circle class="circle" fill="#FF6347" cx="25" cy="25" r="25"</circle></svg>'
+
+        var iconUrl = 'data:image/svg+xml;base64,' + btoa(mySvgString);
+
+        console.log(iconUrl)
+        const icon = L.icon({
+            iconUrl: iconUrl,
+            iconSize: 40
+        });
+
+        var greenIcon = L.icon({
+            iconUrl: '/icons/pulse_dot.svg',
+            shadowUrl: '/icons/pulse_dot.svg',
+
+            iconSize: [38, 95], // size of the icon
+            shadowSize: [50, 64], // size of the shadow
+            iconAnchor: [22, 94], // point of the icon which will correspond to marker's location
+            shadowAnchor: [4, 62],  // the same for the shadow
+            popupAnchor: [-3, -76] // point from which the popup should open relative to the iconAnchor
+        });
+
+        //L.marker([54.903914, 23.958851]).addTo(map);
+
+        const marker = L.marker([54.903914, 23.958851]).addTo(map);
+    </script>
 {% endblock %}

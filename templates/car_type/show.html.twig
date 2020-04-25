@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}CarType{% endblock %}
+
+{% block body %}
+    <h1>CarType</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ car_type.id }}</td>
+            </tr>
+            <tr>
+                <th>Name</th>
+                <td>{{ car_type.name }}</td>
+            </tr>
+            <tr>
+                <th>Price_per_km</th>
+                <td>{{ car_type.pricePerKm }}</td>
+            </tr>
+            <tr>
+                <th>Price_per_minute</th>
+                <td>{{ car_type.pricePerMinute }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('car_type_index') }}">back to list</a>
+
+    <a href="{{ path('car_type_edit', {'id': car_type.id}) }}">edit</a>
+
+    {{ include('car_type/_delete_form.html.twig') }}
+{% endblock %}
