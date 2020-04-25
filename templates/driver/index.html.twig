@@ -2,40 +2,81 @@
 
 {% block title %}Driver index{% endblock %}
 
+{% block stylesheets %}
+
+    <style>
+
+    </style>
+{% endblock %}
+
 {% block body %}
-    <h1>Driver index</h1>
+    <div id="driver-dashboard-container" class="container">
+        <div class="map" id="area-map"></div>
+        <div class="content-container">
+            <button onclick="expandContent()">Expand</button>
+        </div>
+    </div>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>DriverId</th>
-                <th>AverageRating</th>
-                <th>CompleteOrderCount</th>
-                <th>UnfinishedOrderCount</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for driver in drivers %}
-            <tr>
-                <td>{{ driver.id }}</td>
-                <td>{{ driver.driverId }}</td>
-                <td>{{ driver.averageRating }}</td>
-                <td>{{ driver.completeOrderCount }}</td>
-                <td>{{ driver.unfinishedOrderCount }}</td>
-                <td>
-                    <a href="{{ path('driver_show', {'id': driver.id}) }}">show</a>
-                    <a href="{{ path('driver_edit', {'id': driver.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="6">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    <script>
+        const expandContent = () => {
+            document.getElementById("driver-dashboard-container").classList.toggle("active")
+        }
 
-    <a href="{{ path('driver_new') }}">Create new</a>
+        const map = L.map('area-map').setView([54.903914, 23.958851], 13);
+
+        L.tileLayer(
+            "https://api.maptiler.com/maps/basic/{z}/{x}/{y}.png?key=ltrALA6k9d2bkEeRn8Fn",
+            {
+                attribution:
+                    '<a href="https://www.maptiler.com/copyright/" target="_blank">© MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">© OpenStreetMap contributors</a>'
+            }
+        ).addTo(map);
+
+        const driverIcon = L.icon({
+            iconUrl: '/icons/svgs/solid/car.svg',
+            shadowUrl: '/icons/svgs/solid/car.svg',
+            iconSize: [30, 30], // size of the icon
+        });
+
+        const clientIcon = L.icon({
+            iconUrl: '/icons/svgs/solid/male.svg',
+            shadowUrl: '/icons/svgs/solid/male.svg',
+            iconSize: [30, 30], // size of the icon
+        });
+
+        let clients = [
+            {
+                lat: 54.904914,
+                lng: 23.964851,
+            },
+            {
+                lat: 54.903914,
+                lng: 23.953851,
+            },
+            {
+                lat: 54.905914,
+                lng: 23.984851,
+            }
+        ]
+
+        let driverLocation = {lat: 54.903914, lng: 23.958851}
+        const marker = L.marker([driverLocation.lat, driverLocation.lng], {icon: driverIcon}).addTo(map);
+
+        map.on('click', (e) => {
+            driverLocation = e.latlng
+            marker.setLatLng(e.latlng)
+        });
+
+        (function () {
+            driverLocation.lat += 0.0001;
+            marker.setLatLng(driverLocation)
+            setTimeout(arguments.callee, 100);
+        })();
+
+        clients.forEach(client => {
+            console.log(client)
+            L.marker([client.lat, client.lng], {icon: clientIcon}).addTo(map);
+        })
+
+    </script>
 {% endblock %}
