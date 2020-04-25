@@ -85,7 +85,7 @@
         function onClickMarker(orderID) {
             alert(orderID)
 
-            let $assignOrderUrl =  "{{ url('driver_assign_order', {'idDriver': 1, 'idOrder': 1}) }}"
+            let $assignOrderUrl =  "{{ url('driver_assign_order', {'id': 1}) }}"
 
             fetch($assignOrderUrl)
                 .then((response) => {

@@ -30,12 +30,13 @@ class DriverController extends AbstractController
     }
 
     /**
-     * @Route("/{idDriver}/assign/order/{idOrder}", name="driver_assign_order", methods={"GET"})
+     * @Route("/assign/order/{idOrder}", name="driver_assign_order", methods={"GET"})
      */
     public function assignOrderToDriver(DriverRepository $driverRepository,OrderRepository $orderRepository, int $idDriver, int $idOrder): Response
     {
+        //TODO: Get current user with is logged in instead of placing in mocked id
         /** @var Driver $driver */
-        $driver = $driverRepository->findBy(['id' => $idDriver]);
+        $driver = $driverRepository->findBy(['id' => 1]);
         /** @var Order $order */
         $order = $orderRepository->findBy(['id' => $idOrder]);
 
