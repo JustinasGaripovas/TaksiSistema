@@ -3,9 +3,13 @@
 namespace App\Controller;
 
 use App\Entity\Driver;
+use App\Entity\Order;
+use App\Enum\OrderStatusEnum;
 use App\Form\DriverType;
 use App\Repository\DriverRepository;
+use App\Repository\OrderRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -15,6 +19,38 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class DriverController extends AbstractController
 {
+    /**
+     * @Route("/pending", name="driver_pending_orders", methods={"GET"})
+     */
+    public function pendingOrderIndex(OrderRepository $orderRepository): Response
+    {
+        return $this->render('driver/pending_orders.html.twig', [
+            'pendingOrders' => $orderRepository->findAllByStatus(OrderStatusEnum::PENDING),
+        ]);
+    }
+
+    /**
+     * @Route("/{idDriver}/assign/order/{idOrder}", name="driver_assign_order", methods={"GET"})
+     */
+    public function assignOrderToDriver(DriverRepository $driverRepository,OrderRepository $orderRepository, int $idDriver, int $idOrder): Response
+    {
+        /** @var Driver $driver */
+        $driver = $driverRepository->findBy(['id' => $idDriver]);
+        /** @var Order $order */
+        $order = $orderRepository->findBy(['id' => $idOrder]);
+
+        //TODO: Validation to check if there is both order and driver
+
+        $order->setStatus(OrderStatusEnum::IN_PROGRESS);
+        $this->getDoctrine()->getManager()->flush();
+
+        return new JsonResponse(
+            [
+                'status' => 'OK'
+            ]
+        );
+    }
+
     /**
      * @Route("/", name="driver_index", methods={"GET"})
      */
@@ -91,4 +127,6 @@ class DriverController extends AbstractController
 
         return $this->redirectToRoute('driver_index');
     }
+
+
 }
