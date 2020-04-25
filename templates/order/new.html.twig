@@ -24,15 +24,20 @@
 {% block body %}
     <div id="new-order-container" class="container">
         <div class="map" id="area-map"></div>
-        <div class="content-container">
+            <div class="content-container">
             <button onclick="expandContent()">Expand</button>
             <input placeholder="Where are you going?" type="text"/>
             {{ include('order/_form.html.twig') }}
             <a href="{{ path('order_index') }}">back to list</a>
         </div>
+
     </div>
 
     <script>
+        const container = document.getElementsByClassName("content-container")[0]
+        container.addEventListener("click", () => {
+            !document.getElementById("new-order-container").classList.contains("active") && expandContent()
+        })
 
         const expandContent = () => {
             document.getElementById("new-order-container").classList.toggle("active")
