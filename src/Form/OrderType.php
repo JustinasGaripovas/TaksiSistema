@@ -20,7 +20,7 @@ class OrderType extends AbstractType
             ->add('latCoordinateStart', HiddenType::class)
             ->add('lngCoordinateStart',HiddenType::class)
             ->add('latCoordinateDestination', HiddenType::class)
-            ->add('lngCoordinateDestination',HiddenType::class)
+            ->add('lngCoordinateDestination', HiddenType::class)
             ->add('carType',EntityType::class,[
                 'mapped' => false,
                 'class' => CarType::class,

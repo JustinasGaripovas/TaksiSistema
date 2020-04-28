@@ -40,6 +40,10 @@ input[type=text] {
         transition: top 0.5s ease;
     }
 
+    input[type=text]{
+        padding: 10px 15px;
+    }
+
     &.active{
         .content-container{
             top: 10vh;

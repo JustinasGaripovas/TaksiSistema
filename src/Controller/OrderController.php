@@ -56,7 +56,6 @@ class OrderController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
             $order->setStatus(OrderStatusEnum::PENDING);
             $order->setBasePrice(1);
             $order->setBasePrice(1);

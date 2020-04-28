@@ -27,7 +27,7 @@
     <div id="new-order-container" class="container">
         <div class="map" id="area-map"></div>
         <div id="content" class="content-container">
-            <button onclick="alert('Journey canceled')">Cancel journey</button>
+            <button onclick="alert('Journey canceled')">Finish order</button>
         </div>
     </div>
 
@@ -54,47 +54,44 @@
             }
         ).addTo(map);
 
-        const mySvgString = '<svg class="pulse-svg" width="50px" height="50px" viewBox="0 0 50 50" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><circle class="circle first-circle" fill="#FF6347" cx="25" cy="25" r="25"></circle><circle class="circle second-circle" fill="#FF6347" cx="25" cy="25" r="25"></circle><circle class="circle third-circle" fill="#FF6347" cx="25" cy="25" r="25"></circle><circle class="circle" fill="#FF6347" cx="25" cy="25" r="25"</circle></svg>'
 
-        var iconUrl = 'data:image/svg+xml;base64,' + btoa(mySvgString);
-
-        console.log(iconUrl)
-        const icon = L.icon({
-            iconUrl: iconUrl,
-            iconSize: 40
-        });
-
-        var greenIcon = L.icon({
-            iconUrl: '/icons/pulse_dot.svg',
-            shadowUrl: '/icons/pulse_dot.svg',
-
-            iconSize: [38, 95], // size of the icon
-            shadowSize: [50, 64], // size of the shadow
-            iconAnchor: [22, 94], // point of the icon which will correspond to marker's location
-            shadowAnchor: [4, 62],  // the same for the shadow
-            popupAnchor: [-3, -76] // point from which the popup should open relative to the iconAnchor
-        });
-
-        //L.marker([54.903914, 23.958851]).addTo(map);
 
         {% for order in pendingOrders %}
-            L.marker([{{ order.latCoordinateStart }}, {{ order.lngCoordinateStart }}]).addTo(map).on('click', onClickMarker({{ order.id }}));
+        console.log({{ order.id }})
+        console.log('LAT',{{ order.latCoordinateDestination }})
+        console.log('LNG',{{  order.lngCoordinateDestination }})
+        L.marker([{{ order.latCoordinateDestination }}, {{ order.lngCoordinateDestination }}]).addTo(map).on('click',
+            () =>{
+                let assignOrderUrl = "{{ url('driver_assign_order', {'id': order.id}) }}"
+
+                fetch(assignOrderUrl, {method: 'POST'})
+                    .then((response) => {
+                        console.log(response)
+                        return response.json();
+                    })
+                    .then((data) => {
+                        console.log(data);
+                    });
+            }
+
+
+        );
         {% endfor %}
 
 
-        function onClickMarker(orderID) {
-            alert(orderID)
 
-            let $assignOrderUrl =  "{{ url('driver_assign_order', {'id': 1}) }}"
-
-            fetch($assignOrderUrl)
-                .then((response) => {
-                    return response.json();
-                })
-                .then((data) => {
-                    console.log(data);
-                });
+        function getCurrentDeviceLocation() {
+            if (navigator.geolocation) {
+                return navigator.geolocation.getCurrentPosition(showPosition);
+            } else {
+                console.error("User disabled its location");
+            }
         }
+
+        function showPosition(position) {
+            return {lat: position.coords.latitude, long: position.coords.longitude}
+        }
+
 
     </script>
 {% endblock %}

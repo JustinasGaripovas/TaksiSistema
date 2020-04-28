@@ -3,7 +3,7 @@
 {% block title %}New Order{% endblock %}
 
 {% block stylesheets %}
-    <style>
+    <style lang="scss">
         .form-group {
             margin-top: 20px;
         }
@@ -17,7 +17,22 @@
             background: transparent;
             border: 1px solid #333;
             color: #333;
+        }
 
+        #carTypeInput button{
+            margin-top: 15px;
+        }
+
+        #carTypeInput {
+            transition: all 0.3s ease-in;
+        }
+
+        select{
+            width: 130px;
+            height: 30px;
+        }
+        .hide {
+            visibility: hidden;
         }
     </style>
 
@@ -27,16 +42,21 @@
     <div id="new-order-container" class="container">
         <div class="map" id="area-map"></div>
         <div id="content" class="content-container">
-            <input placeholder="Where are you going?" type="text"/>
-            {{ include('order/_form.html.twig') }}
-            <a href="{{ path('order_index') }}">back to list</a>
+            <input id="locationInput" placeholder="Where are you going?" type="text"/>
+            <div id="carTypeInput" >
+                {{ include('order/_form.html.twig') }}
+            </div>
         </div>
     </div>
 
     <script>
+
+
         const container = document.getElementById("content")
         const newOrderContainer = document.getElementById("new-order-container")
         const mapArea = document.getElementById("area-map")
+        const locationInput = document.getElementById("locationInput")
+        const carTypeInput = document.getElementById("carTypeInput")
 
         container.addEventListener("click", () => {
             newOrderContainer.classList.add("active")
@@ -46,7 +66,14 @@
             newOrderContainer.classList.remove("active")
         })
 
+        locationInput.addEventListener("input", () => {
+            console.log("heloo")
+            locationInput.value ? carTypeInput.classList.remove('hide') : carTypeInput.classList.add('hide')
+        })
+
+
         const map = L.map('area-map').setView([54.903914, 23.958851], 13);
+        getCurrentDeviceLocation()
 
         L.tileLayer(
             "https://api.maptiler.com/maps/basic/{z}/{x}/{y}.png?key=ltrALA6k9d2bkEeRn8Fn",
@@ -56,36 +83,40 @@
             }
         ).addTo(map);
 
-        const mySvgString = '<svg class="pulse-svg" width="50px" height="50px" viewBox="0 0 50 50" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><circle class="circle first-circle" fill="#FF6347" cx="25" cy="25" r="25"></circle><circle class="circle second-circle" fill="#FF6347" cx="25" cy="25" r="25"></circle><circle class="circle third-circle" fill="#FF6347" cx="25" cy="25" r="25"></circle><circle class="circle" fill="#FF6347" cx="25" cy="25" r="25"</circle></svg>'
 
-        var iconUrl = 'data:image/svg+xml;base64,' + btoa(mySvgString);
-
-        console.log(iconUrl)
-        const icon = L.icon({
-            iconUrl: iconUrl,
-            iconSize: 40
+        const userIcon = L.icon({
+            iconUrl: '/icons/svgs/solid/user.svg',
+            shadowUrl: '/icons/svgs/solid/user.svg',
+            iconSize: [20, 20],
         });
 
-        var greenIcon = L.icon({
-            iconUrl: '/icons/pulse_dot.svg',
-            shadowUrl: '/icons/pulse_dot.svg',
 
-            iconSize: [38, 95], // size of the icon
-            shadowSize: [50, 64], // size of the shadow
-            iconAnchor: [22, 94], // point of the icon which will correspond to marker's location
-            shadowAnchor: [4, 62],  // the same for the shadow
-            popupAnchor: [-3, -76] // point from which the popup should open relative to the iconAnchor
-        });
+        const marker = L.marker([54.904914, 23.948851]).addTo(map);
 
-        //L.marker([54.903914, 23.958851]).addTo(map);
-
-        const marker = L.marker([54.903914, 23.958851]).addTo(map);
         map.on('click', (e) => {
-            console.log(e)
-            document.getElementById("delivery_recipientLat").value = e.latlng.lat
-            document.getElementById("delivery_recipientLng").value = e.latlng.lng
+            document.getElementById("order_latCoordinateDestination").value = e.latlng.lat
+            document.getElementById("order_lngCoordinateDestination").value = e.latlng.lng
             marker.setLatLng(e.latlng)
         });
+
+
+        function getCurrentDeviceLocation() {
+            if (navigator.geolocation) {
+               navigator.geolocation.getCurrentPosition(showPosition);
+
+            } else {
+                console.error("User disabled its location");
+            }
+        }
+
+        function showPosition(position) {
+            const lat = position.coords.latitude
+            const lng = position.coords.longitude
+            const userMarker = L.marker([lat, lng], {icon: userIcon}).addTo(map);
+            document.getElementById("latCoordinateStart").value = lat
+            document.getElementById("lngCoordinateStart").value = lng
+
+        }
 
     </script>
 {% endblock %}
