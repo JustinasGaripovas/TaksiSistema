@@ -1,0 +1,43 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Admin - Vehicle type{% endblock %}
+
+{% block body_content %}
+    <h1>Vehicle type</h1>
+
+    <button onclick="location.href='{{ path('admin_vehicle_type_new') }}'">New vehicle type</button>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Rate km</th>
+            <th>Rate min</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for vehicle_type in vehicle_types %}
+            <tr>
+                <td>{{ vehicle_type.id }}</td>
+                <td>{{ vehicle_type.name }}</td>
+                <td>{{ vehicle_type.getRateKm() }}</td>
+                <td>{{ vehicle_type.getRateMin() }}</td>
+                <td>
+                    <button onclick="location.href='{{ path('admin_vehicle_type_edit', {'id': vehicle_type.id}) }}'">Edit</button>
+                    <form style="display: inline-block" method="post" action="{{ path('admin_vehicle_type_delete', {'id': vehicle_type.id}) }}" onsubmit="return confirm('Are you sure you want to delete this vehicle type?');">
+                        <input type="hidden" name="_method" value="DELETE">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ vehicle_type.id) }}">
+                        <button class="btn">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
