@@ -24,13 +24,49 @@ class DriverController extends AbstractController
      */
     public function pendingOrderIndex(OrderRepository $orderRepository): Response
     {
+
+        $driver = $this->getDoctrine()->getRepository(Driver::class)->find(1);
+
         return $this->render('driver/pending_orders.html.twig', [
+            'driver' => $driver,
             'pendingOrders' => $orderRepository->findAllByStatus(OrderStatusEnum::PENDING),
         ]);
+
+
     }
 
     /**
-     * @Route("/assign/order/{id}", name="driver_assign_order", methods={"POST"})
+     * @Route("/status/set", name="assign_status", methods={"GET"})
+     */
+    public function assignDriverStatus(Request $request, OrderRepository $orderRepository): Response
+    {
+
+        $isWorking = $request->query->get('isWorking');
+
+        dump($isWorking);
+
+        $driver = $this->getDoctrine()->getRepository(Driver::class)->find(1);
+        $entityManager = $this->getDoctrine()->getManager();
+
+        // tell Doctrine you want to (eventually) save the Product (no queries yet)
+        $entityManager->persist($driver);
+
+        // actually executes the queries (i.e. the INSERT query)
+        $entityManager->flush();
+
+        $driver->setIsWorking($isWorking == 'true' ? 1 : 0);
+
+        return $this->render('driver/pending_orders.html.twig', [
+            'driver' => $driver,
+            'pendingOrders' => $orderRepository->findAllByStatus(OrderStatusEnum::PENDING),
+        ]);
+
+
+    }
+
+
+    /**
+     * @Route("/assign/order/{id}", name="driver_assign_order", methods={"GET"})
      */
     public function assignOrderToDriver(DriverRepository $driverRepository,OrderRepository $orderRepository, Order $order): Response
     {
@@ -43,11 +79,9 @@ class DriverController extends AbstractController
         $order->setStatus(OrderStatusEnum::IN_PROGRESS);
         $this->getDoctrine()->getManager()->flush();
 
-        return new JsonResponse(
-            [
-                'status' => 'OK'
-            ]
-        );
+        return $this->render('order/show.html.twig', [
+            'order' => $order,
+        ]);
     }
 
     /**

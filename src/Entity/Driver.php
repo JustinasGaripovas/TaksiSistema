@@ -49,6 +49,11 @@ class Driver
      */
     private $user;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isWorking;
+
     public function __construct()
     {
         $this->orders = new ArrayCollection();
@@ -151,6 +156,18 @@ class Driver
     public function setUser(User $user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getIsWorking(): ?bool
+    {
+        return $this->isWorking;
+    }
+
+    public function setIsWorking(bool $isWorking): self
+    {
+        $this->isWorking = $isWorking;
 
         return $this;
     }
