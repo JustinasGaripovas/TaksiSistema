@@ -4,7 +4,6 @@ namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\DiscountRepository")
@@ -24,9 +23,6 @@ class Discount
     private $value;
 
     /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $code;
 
     /**
      * @ORM\Column(type="datetime")
@@ -70,7 +66,7 @@ class Discount
         return $this;
     }
 
-    public function getCode(): ?string
+  public function getCode(): ?string
     {
         return $this->code;
     }
@@ -90,7 +86,6 @@ class Discount
     public function setExpiresAt(\DateTimeInterface $expiresAt): self
     {
         $this->expiresAt = $expiresAt;
-
         return $this;
     }
 
@@ -102,7 +97,6 @@ class Discount
     public function setCreatedAt(\DateTimeInterface $createdAt): self
     {
         $this->createdAt = $createdAt;
-
         return $this;
     }
 
@@ -114,7 +108,6 @@ class Discount
     public function setUpdatedAt(?\DateTimeInterface $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
-
         return $this;
     }
 

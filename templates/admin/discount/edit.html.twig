@@ -1,0 +1,15 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Admin - Discount {{ discount.code }} edit{% endblock %}
+
+{% block body_content %}
+
+    {{ form_start(form) }}
+    {{ form_widget(form) }}
+    <button class="btn">{{ button_label|default('Save') }}</button>
+    {{ form_end(form) }}
+
+
+    <a href="{{ path('admin_discount_index') }}">Back</a>
+
+{% endblock %}

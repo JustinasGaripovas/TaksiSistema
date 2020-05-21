@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Admin{% endblock %}
+
+{% block body %}
+    {% block admin_menu %}
+        <ul>
+            <li><a href="{{ path('admin_user_index') }}">Users</a></li>
+            <li><a href="{{ path('admin_driver_index') }}">Drivers</a></li>
+            <li style="padding-left: 10px"><a href="{{ path('admin_driver_index') }}">Requests</a></li>
+            <li><a href="{{ path('admin_discount_index') }}">Discounts</a></li>
+            <li><a href="{{ path('admin_vehicle_type_index') }}">Vehicle types</a></li>
+            <li><a href="{{ path('admin_rate_index') }}">Rates</a></li>
+        </ul>
+    {% endblock %}
+
+    {% block body_content %}{% endblock %}
+{% endblock %}

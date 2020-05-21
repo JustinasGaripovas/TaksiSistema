@@ -1,0 +1,47 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Admin - Discounts{% endblock %}
+
+{% block body_content %}
+    <h1>Discounts</h1>
+
+    <button onclick="location.href='{{ path('admin_discount_new') }}'">New discount</button>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Code</th>
+            <th>Value</th>
+            <th>Quantity</th>
+            <th>Available from</th>
+            <th>Available to</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for discount in discounts %}
+            <tr>
+                <td>{{ discount.id }}</td>
+                <td>{{ discount.code }}</td>
+                <td>{{ discount.value }}</td>
+                <td>{{ discount.quantity }}</td>
+                <td>{{ discount.getAvailableFrom()|date('Y-m-d H:i:s') }}</td>
+                <td>{{ discount.getAvailableTo()|date('Y-m-d H:i:s') }}</td>
+                <td>
+                    <button onclick="location.href='{{ path('admin_discount_edit', {'id': discount.id}) }}'">Edit</button>
+                    <form style="display: inline-block" method="post" action="{{ path('admin_discount_delete', {'id': discount.id}) }}" onsubmit="return confirm('Are you sure you want to delete this discount?');">
+                        <input type="hidden" name="_method" value="DELETE">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ discount.id) }}">
+                        <button class="btn">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
