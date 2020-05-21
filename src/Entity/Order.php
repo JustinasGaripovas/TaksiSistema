@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -67,6 +69,32 @@ class Order
      * @ORM\Column(type="integer", nullable=true)
      */
     private $status;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Car", inversedBy="orders")
+     */
+    private $usedCar;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Discount", inversedBy="orders")
+     */
+    private $usedDiscount;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="orders")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $user;
+
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\CarAccident", inversedBy="relatedOrder", cascade={"persist", "remove"})
+     */
+    private $carAccident;
+
+    public function __construct()
+    {
+        $this->usedCar = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -195,5 +223,67 @@ class Order
     public function setStatus(int $status): void
     {
         $this->status = $status;
+    }
+
+    /**
+     * @return Collection|Car[]
+     */
+    public function getUsedCar(): Collection
+    {
+        return $this->usedCar;
+    }
+
+    public function addUsedCar(Car $usedCar): self
+    {
+        if (!$this->usedCar->contains($usedCar)) {
+            $this->usedCar[] = $usedCar;
+        }
+
+        return $this;
+    }
+
+    public function removeUsedCar(Car $usedCar): self
+    {
+        if ($this->usedCar->contains($usedCar)) {
+            $this->usedCar->removeElement($usedCar);
+        }
+
+        return $this;
+    }
+
+    public function getUsedDiscount(): ?Discount
+    {
+        return $this->usedDiscount;
+    }
+
+    public function setUsedDiscount(?Discount $usedDiscount): self
+    {
+        $this->usedDiscount = $usedDiscount;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    public function getCarAccident(): ?CarAccident
+    {
+        return $this->carAccident;
+    }
+
+    public function setCarAccident(?CarAccident $carAccident): self
+    {
+        $this->carAccident = $carAccident;
+
+        return $this;
     }
 }

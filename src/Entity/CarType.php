@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -30,6 +32,16 @@ class CarType
      * @ORM\Column(type="integer")
      */
     private $price_per_minute;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Car", mappedBy="type", cascade={"remove"})
+     */
+    private $cars;
+
+    public function __construct()
+    {
+        $this->cars = new ArrayCollection();
+    }
 
     public function __toString()
     {
@@ -73,6 +85,37 @@ class CarType
     public function setPricePerMinute(int $price_per_minute): self
     {
         $this->price_per_minute = $price_per_minute;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Car[]
+     */
+    public function getCars(): Collection
+    {
+        return $this->cars;
+    }
+
+    public function addCar(Car $car): self
+    {
+        if (!$this->cars->contains($car)) {
+            $this->cars[] = $car;
+            $car->setType($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCar(Car $car): self
+    {
+        if ($this->cars->contains($car)) {
+            $this->cars->removeElement($car);
+            // set the owning side to null (unless already changed)
+            if ($car->getType() === $this) {
+                $car->setType(null);
+            }
+        }
 
         return $this;
     }
