@@ -62,8 +62,6 @@ class OrderController extends AbstractController
             $order->setDriverRating(1);
             $order->setPassengerRating(1);
 
-            $order->setDriver($this->getDoctrine()->getRepository(Driver::class)->find(1));
-
             /** @var VehicleType $selectedCarType */
             $selectedCarType = $form['vehicleType']->getData();
 

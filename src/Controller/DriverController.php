@@ -24,15 +24,12 @@ class DriverController extends AbstractController
      */
     public function pendingOrderIndex(OrderRepository $orderRepository): Response
     {
-
         $driver = $this->getDoctrine()->getRepository(Driver::class)->find(1);
 
         return $this->render('driver/pending_orders.html.twig', [
             'driver' => $driver,
             'pendingOrders' => $orderRepository->findAllByStatus(OrderStatusEnum::PENDING),
         ]);
-
-
     }
 
     /**
@@ -60,15 +57,12 @@ class DriverController extends AbstractController
             'driver' => $driver,
             'pendingOrders' => $orderRepository->findAllByStatus(OrderStatusEnum::PENDING),
         ]);
-
-
     }
-
 
     /**
      * @Route("/assign/order/{id}", name="driver_assign_order", methods={"GET"})
      */
-    public function assignOrderToDriver(DriverRepository $driverRepository,OrderRepository $orderRepository, Order $order): Response
+    public function assignOrderToDriver(DriverRepository $driverRepository, Order $order): Response
     {
         //TODO: Get current user with is logged in instead of placing in mocked id
         /** @var Driver $driver */
