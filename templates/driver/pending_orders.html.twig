@@ -2,6 +2,10 @@
 
 {% block title %}Pending orders{% endblock %}
 
+{% block scripts %}
+    <script src="/services/map/index.js"></script>
+{% endblock %}
+
 {% block stylesheets %}
     <style>
         .form-group {
@@ -63,8 +67,6 @@
     </div>
 
     <script>
-        const map = L.map('area-map').setView([54.903914, 23.958851], 13);
-
         let isDriverActive = false
 
         let isWorking = {{ driver.isWorking|json_encode() }};
@@ -75,48 +77,30 @@
             statusSpan.classList.add(isWorking ? 'working' : 'off')
         })
 
-        const setIsDriverActive = (status) => {
 
-        }
-        L.tileLayer(
-            "https://api.maptiler.com/maps/basic/{z}/{x}/{y}.png?key=ltrALA6k9d2bkEeRn8Fn",
-            {
-                attribution:
-                    '<a href="https://www.maptiler.com/copyright/" target="_blank">© MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">© OpenStreetMap contributors</a>'
-            }
-        ).addTo(map);
-
+        const map = initializeMap('area-map', [54.903914, 23.958851])
 
         let url = ''
         let takeLink = ''
+        let marker = {}
         {% if driver.isWorking == true %}
 
         {% for order in pendingOrders %}
-        console.log('LAT',{{ order.latCoordinateDestination }})
-        console.log('LNG',{{ order.lngCoordinateDestination }})
         url = "{{ url('driver_assign_order', {'id': order.id}) }}"
         takeLink = document.createElement('a')
         takeLink.href = url
         takeLink.classList.add('take-order')
         takeLink.innerText = "Take"
-        L.marker([{{ order.latCoordinateDestination }}, {{ order.lngCoordinateDestination }}]).addTo(map).bindPopup(takeLink);
+        marker = addMarker(map,{ lat: {{ order.latCoordinateDestination }}, lng: {{ order.lngCoordinateDestination }} },'user-clock')
+        marker.bindPopup(takeLink);
+
+
 
         {#);#}
         {% endfor %}
         {% endif %}
 
 
-        function getCurrentDeviceLocation() {
-            if (navigator.geolocation) {
-                return navigator.geolocation.getCurrentPosition(showPosition);
-            } else {
-                console.error("User disabled its location");
-            }
-        }
-
-        function showPosition(position) {
-            return {lat: position.coords.latitude, long: position.coords.longitude}
-        }
 
 
     </script>

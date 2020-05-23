@@ -2,6 +2,10 @@
 
 {% block title %}New Order{% endblock %}
 
+{% block scripts %}
+    <script src="/services/map/index.js"></script>
+{% endblock %}
+
 {% block stylesheets %}
     <style lang="scss">
         .form-group {
@@ -49,9 +53,10 @@
         </div>
     </div>
 
+{% endblock %}
+
+{% block javascripts %}
     <script>
-
-
         const container = document.getElementById("content")
         const newOrderContainer = document.getElementById("new-order-container")
         const mapArea = document.getElementById("area-map")
@@ -72,51 +77,27 @@
         })
 
 
-        const map = L.map('area-map').setView([54.903914, 23.958851], 13);
-        getCurrentDeviceLocation()
+        const map = initializeMap('area-map', [54.903914, 23.958851])
 
-        L.tileLayer(
-            "https://api.maptiler.com/maps/basic/{z}/{x}/{y}.png?key=ltrALA6k9d2bkEeRn8Fn",
-            {
-                attribution:
-                    '<a href="https://www.maptiler.com/copyright/" target="_blank">© MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">© OpenStreetMap contributors</a>'
-            }
-        ).addTo(map);
+        const setUserPosition = (pos) => {
+            document.getElementById("order_latCoordinateStart").value = pos.lat
+            document.getElementById("order_lngCoordinateStart").value = pos.lng
+            addMarker(map,pos,'box')
+        }
+        getCurrentDeviceLocation(setUserPosition)
 
 
-        const userIcon = L.icon({
-            iconUrl: '/icons/svgs/solid/user.svg',
-            shadowUrl: '/icons/svgs/solid/user.svg',
-            iconSize: [20, 20],
-        });
-
-
-        const marker = L.marker([54.904914, 23.948851]).addTo(map);
+        const defaultDestination = {lat:54.904914, lng: 23.948851}
+        const destinationMarker = addMarker(map, defaultDestination,'thumbtack')
+        document.getElementById("order_latCoordinateDestination").value = defaultDestination.lat
+        document.getElementById("order_lngCoordinateDestination").value = defaultDestination.lng
 
         map.on('click', (e) => {
             document.getElementById("order_latCoordinateDestination").value = e.latlng.lat
             document.getElementById("order_lngCoordinateDestination").value = e.latlng.lng
-            marker.setLatLng(e.latlng)
+            setMarkerLocation(destinationMarker,e.latlng)
+
         });
-
-
-        function getCurrentDeviceLocation() {
-            if (navigator.geolocation) {
-               navigator.geolocation.getCurrentPosition(showPosition);
-
-            } else {
-                console.error("User disabled its location");
-            }
-        }
-
-        function showPosition(position) {
-            const lat = position.coords.latitude
-            const lng = position.coords.longitude
-            const userMarker = L.marker([lat, lng], {icon: userIcon}).addTo(map);
-            document.getElementById("latCoordinateStart").value = lat
-            document.getElementById("lngCoordinateStart").value = lng
-
-        }
 
     </script>
 {% endblock %}

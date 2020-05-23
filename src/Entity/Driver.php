@@ -44,9 +44,9 @@ class Driver
     private $orders;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", options={"default"=false}, nullable=false)
      */
-    private $isWorking;
+    private $isWorking = false;
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\User", inversedBy="driver", cascade={"persist", "remove"})
