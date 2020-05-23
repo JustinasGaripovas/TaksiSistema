@@ -134,13 +134,23 @@ class OrderController extends AbstractController
         $order->setStatus(OrderStatusEnum::CANCELED);
         $order->setBasePrice($this->recalculateOrderPrice($order));
 
-        return new JsonResponse(
-            [
-                'order_status' => $order->getStatus(),
-                'order_price' => $order->getBasePrice()
-            ]
-        );
+        $this->getDoctrine()->getManager()->flush();
+
+        return $this->redirectToRoute('order_new');
     }
+
+
+    /**
+     * @Route("/order/finish/{id}", name="order_finish", methods={"GET"})
+     */
+    public function finish(Order $order)
+    {
+        $order->setStatus(OrderStatusEnum::FINISHED);
+        $this->getDoctrine()->getManager()->flush();
+
+        return $this->redirectToRoute('order_new');
+    }
+
 
     private function recalculateOrderPrice(Order $order)
     {

@@ -86,7 +86,11 @@
         }
         getCurrentDeviceLocation(setUserPosition)
 
-        const destinationMarker = addMarker(map,{lat:54.904914, lng: 23.948851},'thumbtack')
+
+        const defaultDestination = {lat:54.904914, lng: 23.948851}
+        const destinationMarker = addMarker(map, defaultDestination,'thumbtack')
+        document.getElementById("order_latCoordinateDestination").value = defaultDestination.lat
+        document.getElementById("order_lngCoordinateDestination").value = defaultDestination.lng
 
         map.on('click', (e) => {
             document.getElementById("order_latCoordinateDestination").value = e.latlng.lat

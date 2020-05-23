@@ -1,7 +1,13 @@
 @import 'leaflet.css';
 
+@font-face {
+    font-family: open-sans;
+    src: url('/font/OpenSans-Regular.ttf');
+}
+
 *{
     box-sizing: border-box;
+    font-family: open-sans;
 }
 
 body {
@@ -24,6 +30,11 @@ input[type=text] {
     border: 1px solid #ccc;
     border-radius: 4px;
     box-sizing: border-box;
+}
+
+.container{
+    position: relative;
+    z-index: 3;
 }
 
 #new-order-container{

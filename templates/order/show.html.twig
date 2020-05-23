@@ -9,53 +9,65 @@
 
 {% block stylesheets %}
     <style>
-        .form-group {
-            margin-top: 20px;
+
+        .map {
+            height: 100vh;
         }
 
-        input, select {
+        .actions a {
+            padding: 10px 20px;
             display: block;
+            text-decoration: none;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid #444;
+            color: white;
+            text-align: center;
+
         }
 
-        button {
-            padding: 5px 10px;
-            background: transparent;
-            border: 1px solid #333;
-            color: #333;
+        .actions a:hover {
+            background: rgba(0, 0, 0, 0.6);
+        }
 
+
+        .actions {
+            position: absolute;
+            z-index: 1000;
+            top: 20px;
+            right: 20px;
+        }
+
+        .actions a + a {
+            margin-top: 10px;
         }
     </style>
 
 {% endblock %}
 
 {% block body %}
-    <div id="new-order-container" class="container">
-        <div class="map" id="area-map"></div>
-        <div id="content" class="content-container">
-            <button onclick="alert('End journey')">End journey</button>
-            <a href="{{ path('order_index') }}">back to list</a>
-        </div>
+<div id="order-view" class="container">
+    <div class="map" id="area-map"></div>
+    <div class="actions">
+        {% if is_granted('ROLE_DRIVER') == true %}
+            <a href="{{ path('order_finish', {'id': order.id}) }}">End order</a>
+            <a href="tel:{{ order.user.phone }}">Contact user</a>
+        {% endif %}
+        {% if is_granted('ROLE_USER') == false %}
+            <a href="">Rate driver</a>
+            <a href="tel:{{ order.driver.phone }}">Contact driver</a>
+            <a href="{{ path('order_cancel', {'id': order.id}) }}">Cancel order</a>
+        {% endif %}
     </div>
 
     <script>
-        const container = document.getElementById("content")
-        const newOrderContainer = document.getElementById("new-order-container")
-        const mapArea = document.getElementById("area-map")
-
-        container.addEventListener("click", () => {
-            newOrderContainer.classList.add("active")
-        })
-
-        mapArea.addEventListener("click", () => {
-            newOrderContainer.classList.remove("active")
-        })
-
         const map = initializeMap('area-map', [{{ order.latCoordinateStart }}, {{ order.lngCoordinateStart }}])
 
-        const startMarker = addMarker(map,{lat: {{ order.latCoordinateStart }}, lng: {{ order.lngCoordinateStart }}})
+        const startMarker = addMarker(map, {lat: {{ order.latCoordinateStart }}, lng: {{ order.lngCoordinateStart }}})
 
-        const endMarker = addMarker(map,{lat: {{ order.latCoordinateDestination }}, lng: {{ order.lngCoordinateDestination }}})
+        const endMarker = addMarker(map, {
+            lat: {{ order.latCoordinateDestination }},
+            lng: {{ order.lngCoordinateDestination }}})
 
 
     </script>
-{% endblock %}
+    {% endblock %}
