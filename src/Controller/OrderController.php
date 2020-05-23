@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Entity\CarType;
 use App\Entity\Driver;
 use App\Entity\Order;
 use App\Entity\User;
