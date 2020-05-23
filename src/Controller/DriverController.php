@@ -24,11 +24,18 @@ class DriverController extends AbstractController
      */
     public function pendingOrderIndex(OrderRepository $orderRepository): Response
     {
+        /** @var Driver $driver */
         $driver = $this->getDoctrine()->getRepository(Driver::class)->find(1);
 
+        $orders = [];
+
+        if ($driver->getIsWorking()) {
+            $orders = $orderRepository->findAllByStatus(OrderStatusEnum::PENDING);
+        }
+
         return $this->render('driver/pending_orders.html.twig', [
+            'pendingOrders' => $orders,
             'driver' => $driver,
-            'pendingOrders' => $orderRepository->findAllByStatus(OrderStatusEnum::PENDING),
         ]);
     }
 
