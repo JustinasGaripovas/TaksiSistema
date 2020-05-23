@@ -6,6 +6,7 @@ use App\Entity\CarType;
 use App\Entity\Driver;
 use App\Entity\Order;
 use App\Entity\User;
+use App\Entity\VehicleType;
 use App\Enum\OrderStatusEnum;
 use App\Form\OrderType;
 use App\Manager\UserManager;
@@ -29,7 +30,6 @@ class OrderController extends AbstractController
         /** @var Order $activeOrder */
         $activeOrder = $userManager->getCurrentOrder();
 
-        // Active Order     User     get id
         if(!is_null($activeOrder))
             return $this->redirectToRoute("order_show", ['id' => $activeOrder->getId()]);
 
@@ -65,8 +65,8 @@ class OrderController extends AbstractController
 
             $order->setDriver($this->getDoctrine()->getRepository(Driver::class)->find(1));
 
-            /** @var CarType $selectedCarType */
-            $selectedCarType = $form['carType']->getData();
+            /** @var VehicleType $selectedCarType */
+            $selectedCarType = $form['vehicleType']->getData();
 
             //TODO: Listener which calls itself
 

@@ -2,8 +2,9 @@
 
 namespace App\Form;
 
-use App\Entity\CarType;
 use App\Entity\Order;
+use App\Entity\VehicleType;
+use App\Form\VehicleTypeType;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -21,9 +22,9 @@ class OrderType extends AbstractType
             ->add('lngCoordinateStart',HiddenType::class)
             ->add('latCoordinateDestination', HiddenType::class)
             ->add('lngCoordinateDestination', HiddenType::class)
-            ->add('carType',EntityType::class,[
+            ->add('vehicleType',EntityType::class,[
                 'mapped' => false,
-                'class' => CarType::class,
+                'class' => VehicleType::class,
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('u');
                 },
