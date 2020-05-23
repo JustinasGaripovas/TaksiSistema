@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Evaluation form{% endblock %}
+
+{% block stylesheets %}
+    <style lang="scss">
+        .form-group {
+            margin-top: 20px;
+        }
+
+        input, select {
+            display: block;
+        }
+
+        button {
+            padding: 5px 10px;
+            background: transparent;
+            border: 1px solid #333;
+            color: #333;
+        }
+
+        #carTypeInput button{
+            margin-top: 15px;
+        }
+
+        #carTypeInput {
+            transition: all 0.3s ease-in;
+        }
+
+        select{
+            width: 130px;
+            height: 30px;
+        }
+        .hide {
+            visibility: hidden;
+        }
+    </style>
+
+{% endblock %}
+
+{% block body %}
+    <h1>Evaluation form</h1>
+    <div>
+        {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <button class="btn">{{ button_label|default('Evaluate') }}</button>
+        {{ form_end(form) }}
+    </div>
+{% endblock %}

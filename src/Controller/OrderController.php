@@ -7,10 +7,12 @@ use App\Entity\Order;
 use App\Entity\User;
 use App\Entity\VehicleType;
 use App\Enum\OrderStatusEnum;
+use App\Form\EvaluateDriverType;
 use App\Form\OrderType;
 use App\Manager\UserManager;
 use App\Repository\OrderRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -61,8 +63,6 @@ class OrderController extends AbstractController
             $order->setAdditionalPrice(1);
             $order->setDriverRating(1);
             $order->setPassengerRating(1);
-
-            $order->setDriver($this->getDoctrine()->getRepository(Driver::class)->find(1));
 
             /** @var VehicleType $selectedCarType */
             $selectedCarType = $form['vehicleType']->getData();
@@ -124,5 +124,45 @@ class OrderController extends AbstractController
         }
 
         return $this->redirectToRoute('order_index');
+    }
+
+    /**
+     * @Route("/order/cancel/{id}", name="order_cancel", methods={"GET"})
+     */
+    public function cancel(Order $order)
+    {
+        $order->setStatus(OrderStatusEnum::CANCELED);
+        $order->setBasePrice($this->recalculateOrderPrice($order));
+
+        return new JsonResponse(
+            [
+                'order_status' => $order->getStatus(),
+                'order_price' => $order->getBasePrice()
+            ]
+        );
+    }
+
+    private function recalculateOrderPrice(Order $order)
+    {
+        return 10;
+    }
+
+    /**
+     * @Route("/order/{id}/evaluate/driver", name="order_evaluate_driver", methods={"GET"})
+     */
+    public function evaluateDriver(Request $request, Order $order)
+    {
+        $form = $this->createForm(EvaluateDriverType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $order->setDriverRating($form['rating']);
+            $this->getDoctrine()->getManager()->flush();
+            return $this->redirectToRoute("order_new");
+        }
+
+        return $this->render('order/evaluate.html.twig', [
+            'form' => $form->createView(),
+        ]);
     }
 }

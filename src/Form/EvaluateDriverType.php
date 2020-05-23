@@ -2,28 +2,24 @@
 
 namespace App\Form;
 
-use App\Entity\Driver;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class DriverType extends AbstractType
+class EvaluateDriverType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('driverId')
-            ->add('averageRating')
-            ->add('completeOrderCount')
-            ->add('unfinishedOrderCount')
-            ->add('user')
+            ->add('rating')
+            ->add('comment')
         ;
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => Driver::class,
+            // Configure your form options here
         ]);
     }
 }

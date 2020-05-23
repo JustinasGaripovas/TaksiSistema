@@ -9,4 +9,5 @@ class OrderStatusEnum
     const PENDING = 0;
     const IN_PROGRESS = 1;
     const FINISHED = 2;
+    const CANCELED = 3;
 }
