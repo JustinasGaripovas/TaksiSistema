@@ -11,6 +11,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Driver
 {
+    use UserTrait;
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -44,12 +46,6 @@ class Driver
     private $orders;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\User", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $user;
-
-    /**
      * @ORM\Column(type="boolean")
      */
     private $isWorking;
@@ -57,11 +53,6 @@ class Driver
     public function __construct()
     {
         $this->orders = new ArrayCollection();
-    }
-
-    public function __toString()
-    {
-        return $this->getUser()->__toString();
     }
 
     public function getId(): ?int
@@ -144,18 +135,6 @@ class Driver
                 $order->setDriver(null);
             }
         }
-
-        return $this;
-    }
-
-    public function getUser(): ?User
-    {
-        return $this->user;
-    }
-
-    public function setUser(User $user): self
-    {
-        $this->user = $user;
 
         return $this;
     }

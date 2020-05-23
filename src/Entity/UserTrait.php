@@ -4,7 +4,7 @@
 namespace App\Entity;
 
 
-class UserTrait
+trait UserTrait
 {
     /**
      * @ORM\Column(type="string", length=255)
