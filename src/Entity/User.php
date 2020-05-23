@@ -3,10 +3,12 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
+ * @UniqueEntity(fields={"email"}, message="There is already an account with this email")
  */
 class User implements UserInterface
 {
@@ -21,11 +23,13 @@ class User implements UserInterface
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\Driver", mappedBy="user", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(nullable=true)
      */
     private $driver;
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\Admin", mappedBy="user", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(nullable=true)
      */
     private $admin;
 
@@ -70,11 +74,14 @@ class User implements UserInterface
 
     public function getRoles()
     {
+        return ['ROLE_USER'];
         // TODO: Implement getRoles() method.
     }
 
     public function getPassword()
     {
+        return $this->passwordEncoded;
+
         // TODO: Implement getPassword() method.
     }
 
@@ -85,6 +92,8 @@ class User implements UserInterface
 
     public function getUsername()
     {
+        return $this->email;
+
         // TODO: Implement getUsername() method.
     }
 
