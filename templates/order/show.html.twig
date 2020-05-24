@@ -4,6 +4,7 @@
 
 {% block scripts %}
     <script src="/services/map/mapManagement.js"></script>
+    <script src="/services/location/index.js"></script>
 {% endblock %}
 
 
@@ -62,11 +63,13 @@
     <script>
         const map = initializeMap('area-map', [{{ order.latCoordinateStart }}, {{ order.lngCoordinateStart }}])
 
-        const startMarker = addMarker(map, {lat: {{ order.latCoordinateStart }}, lng: {{ order.lngCoordinateStart }}})
+        const startMarker = addMarker(map, {
+            lat: {{ order.latCoordinateStart }},
+            lng: {{ order.lngCoordinateStart }}}, 'user')
 
         const endMarker = addMarker(map, {
             lat: {{ order.latCoordinateDestination }},
-            lng: {{ order.lngCoordinateDestination }}})
+            lng: {{ order.lngCoordinateDestination }}}, 'thumbtack')
 
 
     </script>
