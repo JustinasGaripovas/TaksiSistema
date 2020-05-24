@@ -2,6 +2,22 @@
 
 {% block title %}Admin - Order view{% endblock %}
 
+{% block scripts %}
+    <script src="/services/map/mapManagement.js"></script>
+    <script src="/services/location/index.js"></script>
+{% endblock %}
+
+{% block stylesheets %}
+    <style>
+        .map {
+            height: 500px;
+            width: 500px;
+            overflow: hidden;
+            border: 1px solid;
+        }
+    </style>
+{% endblock %}
+
 {% block body_content %}
 
     <h1>Order view</h1>
@@ -60,6 +76,25 @@
             </tr>
             <tr>
                 <td colspan="2"><h2>Order map</h2></td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <div class="map" id="area-map"></div>
+
+                    <script>
+                        const map = initializeMap('area-map', [{{ order.latCoordinateStart }}, {{ order.lngCoordinateStart }}])
+
+                        const startMarker = addMarker(map, {
+                            lat: {{ order.latCoordinateStart }},
+                            lng: {{ order.lngCoordinateStart }}
+                        }, 'user');
+
+                        const endMarker = addMarker(map, {
+                            lat: {{ order.latCoordinateDestination }},
+                            lng: {{ order.lngCoordinateDestination }}
+                        }, 'thumbtack');
+                    </script>
+                </td>
             </tr>
         </tbody>
     </table>
