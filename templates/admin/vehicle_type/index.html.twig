@@ -2,9 +2,9 @@
 
 {% block title %}Admin - Vehicle type{% endblock %}
 
-{% block body_content %}
-    <h1>Vehicle type</h1>
+{% block body_title %}<h1>Vehicle type</h1>{% endblock %}
 
+{% block body_content %}
     <button onclick="location.href='{{ path('admin_vehicle_type_new') }}'">New vehicle type</button>
 
     <table class="table">
@@ -35,7 +35,7 @@
             </tr>
         {% else %}
             <tr>
-                <td colspan="7">no records found</td>
+                <td colspan="5">no records found</td>
             </tr>
         {% endfor %}
         </tbody>

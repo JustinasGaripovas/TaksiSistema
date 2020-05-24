@@ -1,14 +1,10 @@
 <?php
 
-
 namespace App\Controller\Admin;
-
 
 use App\Entity\Discount;
 use App\Entity\VehicleType;
-use App\Form\DiscountType;
 use App\Form\VehicleTypeType;
-use App\Repository\DiscountRepository;
 use App\Repository\VehicleTypeRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -49,6 +45,7 @@ class AdminVehicleTypeController extends AbstractController
             $entityManager->persist($vehicle_type);
             $entityManager->flush();
 
+            $this->addFlash('success', 'New Vehicle type created.');
             return $this->redirectToRoute('admin_vehicle_type_index');
         }
 
@@ -70,6 +67,7 @@ class AdminVehicleTypeController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($discount);
             $entityManager->flush();
+            $this->addFlash('success', 'Vehicle type deleted.');
         }
 
         return $this->redirectToRoute('admin_discount_index');
@@ -90,6 +88,7 @@ class AdminVehicleTypeController extends AbstractController
         {
             $this->getDoctrine()->getManager()->flush();
 
+            $this->addFlash('success', 'Vehicle type edited.');
             return $this->redirectToRoute('admin_vehicle_type_index');
         }
 

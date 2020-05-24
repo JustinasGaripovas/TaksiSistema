@@ -15,8 +15,6 @@ class VehicleTypeType extends AbstractType
             ->add('name')
             ->add('rate_km')
             ->add('rate_min')
-            ->add('available_from')
-            ->add('available_to')
         ;
     }
 

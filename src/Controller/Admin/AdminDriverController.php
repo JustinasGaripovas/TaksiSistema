@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Controller\Admin;
-
 
 use App\Entity\Driver;
 use App\Repository\DriverRepository;
@@ -52,6 +50,7 @@ class AdminDriverController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($driver);
             $entityManager->flush();
+            $this->addFlash('success', 'Driver deleted.');
         }
 
         return $this->redirectToRoute('admin_driver_index');

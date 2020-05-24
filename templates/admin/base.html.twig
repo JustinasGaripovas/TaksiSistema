@@ -2,16 +2,56 @@
 
 {% block title %}Admin{% endblock %}
 
+{% block stylesheets %}
+    <style>
+        .alert{
+            padding: 5px 10px;
+            color: white;
+            font-size: 18px;
+            min-width: 300px;
+            display: inline-block;
+            margin-bottom: 25px;
+        }
+        .alert-success{
+            background-color: green;
+        }
+        .alert-error{
+            background-color: red;
+        }
+    </style>
+{% endblock %}
+
 {% block body %}
     {% block admin_menu %}
         <ul>
+            <li><a href="{{ path('admin_order_index') }}">Orders</a></li>
             <li><a href="{{ path('admin_user_index') }}">Users</a></li>
             <li><a href="{{ path('admin_driver_index') }}">Drivers</a></li>
-            <li style="padding-left: 10px"><a href="{{ path('admin_driver_index') }}">Requests</a></li>
+            <li style="padding-left: 10px"><a href="{{ path('admin_driver_request_index') }}">Requests</a></li>
             <li><a href="{{ path('admin_discount_index') }}">Discounts</a></li>
             <li><a href="{{ path('admin_vehicle_type_index') }}">Vehicle types</a></li>
             <li><a href="{{ path('admin_rate_index') }}">Rates</a></li>
         </ul>
+    {% endblock %}
+
+    {% block body_title %}{% endblock %}
+
+    {% block error_flash_content %}
+        {% for message in app.flashes('error') %}
+            <div class="alert-container">
+                <div class="alert alert-error">
+                    {{ message }}
+                </div>
+            </div>
+        {% endfor %}
+
+        {% for message in app.flashes('success') %}
+            <div class="alert-container">
+                <div class="alert alert-success">
+                    {{ message }}
+                </div>
+            </div>
+        {% endfor %}
     {% endblock %}
 
     {% block body_content %}{% endblock %}

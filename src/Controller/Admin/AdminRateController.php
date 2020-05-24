@@ -1,14 +1,9 @@
 <?php
 
-
 namespace App\Controller\Admin;
 
-
-use App\Entity\Discount;
 use App\Entity\Rate;
-use App\Form\DiscountType;
 use App\Form\RateType;
-use App\Repository\DiscountRepository;
 use App\Repository\RateRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -34,6 +29,8 @@ class AdminRateController extends AbstractController
 
     /**
      * @Route("/new", name="admin_rate_new", methods={"GET","POST"})
+     * @param Request $request
+     * @return Response
      */
     public function new(Request $request): Response
     {
@@ -47,6 +44,7 @@ class AdminRateController extends AbstractController
             $entityManager->persist($rate);
             $entityManager->flush();
 
+            $this->addFlash('success', 'New rate created.');
             return $this->redirectToRoute('admin_rate_index');
         }
 
@@ -68,6 +66,7 @@ class AdminRateController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($rate);
             $entityManager->flush();
+            $this->addFlash('success', 'Rate deleted.');
         }
 
         return $this->redirectToRoute('admin_rate_index');
@@ -88,6 +87,7 @@ class AdminRateController extends AbstractController
         {
             $this->getDoctrine()->getManager()->flush();
 
+            $this->addFlash('success', 'Rate edited.');
             return $this->redirectToRoute('admin_rate_index');
         }
 

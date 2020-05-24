@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Service;
-
 
 use App\Entity\Order;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -21,8 +19,8 @@ class CommunicationService
 
     }
 
-    public function WriteLetterToEmail(string $email)
+    public function WriteLetterToEmail(string $email, string $content)
     {
-
+        echo 'SEND MAIL!';
     }
 }

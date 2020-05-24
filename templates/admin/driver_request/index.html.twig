@@ -1,0 +1,33 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Admin - Drivers requests{% endblock %}
+
+{% block body_title %}<h1>Drivers requests</h1>{% endblock %}
+
+{% block body_content %}
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>User</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for request in requests %}
+            <tr>
+                <td>{{ request.id }}</td>
+                <td>{{ request.user }}</td>
+                <td>
+                    <button onclick="confirm('Are you sure you want accept this user as driver?') ? location.href='{{ path('admin_driver_request_accept', {'id': request.id}) }}' : '';">Accept</button>
+                    <button onclick="confirm('Are you sure you want deny this user as driver?') ? location.href='{{ path('admin_driver_request_deny', {'id': request.id}) }}': '';">Deny</button>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="3">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
