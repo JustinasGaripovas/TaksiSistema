@@ -23,6 +23,11 @@ class DriverRequest
      */
     private $user;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $driverId;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -36,6 +41,18 @@ class DriverRequest
     public function setUser(?User $user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getDriverId(): ?string
+    {
+        return $this->driverId;
+    }
+
+    public function setDriverId(string $driverId): self
+    {
+        $this->driverId = $driverId;
 
         return $this;
     }

@@ -34,66 +34,86 @@
                 <th>AdditionalPrice</th>
                 <td>{{ order.additionalPrice }}</td>
             </tr>
-            <tr>
-                <td colspan="2"><h2>User</h2></td>
-            </tr>
-            <tr>
-                <th>Name</th>
-                <td>{{ order.user }}</td>
-            </tr>
-            <tr>
-                <th>Email</th>
-                <td><a href="mailto:{{ order.user.email }}">{{ order.user.email }}</a></td>
-            </tr>
-            <tr>
-                <th>Phone number</th>
-                <td><a href="tel:{{ order.user.phoneNumber }}">{{ order.user.phoneNumber }}</a></td>
-            </tr>
-            <tr>
-                <th>Rating</th>
-                <td>{{ order.passengerRating }}</td>
-            </tr>
-            <tr>
-                <td colspan="2"><h2>Driver</h2></td>
-            </tr>
-            <tr>
-                <th>Name</th>
-                <td><a href="{{ path('admin_driver_statistic', {'id': order.driver.id}) }}">{{ order.driver }}</a></td>
-            </tr>
-            <tr>
-                <th>Email</th>
-                <td><a href="mailto:{{ order.driver.user.email }}">{{ order.driver.user.email }}</a></td>
-            </tr>
-            <tr>
-                <th>Phone number</th>
-                <td><a href="tel:{{ order.driver.user.phoneNumber }}">{{ order.driver.user.phoneNumber }}</a></td>
-            </tr>
-            <tr>
-                <th>Rating</th>
-                <td>{{ order.driverRating }}</td>
-            </tr>
-            <tr>
-                <td colspan="2"><h2>Order map</h2></td>
-            </tr>
-            <tr>
-                <td colspan="2">
-                    <div class="map" id="area-map"></div>
+            {% if order.user %}
+                <tr>
+                    <td colspan="2"><h2>User</h2></td>
+                </tr>
+                <tr>
+                    <th>Name</th>
+                    <td>{{ order.user }}</td>
+                </tr>
+                <tr>
+                    <th>Email</th>
+                    <td><a href="mailto:{{ order.user.email }}">{{ order.user.email }}</a></td>
+                </tr>
+                <tr>
+                    <th>Phone number</th>
+                    <td><a href="tel:{{ order.user.phoneNumber }}">{{ order.user.phoneNumber }}</a></td>
+                </tr>
+                <tr>
+                    <th>Rating</th>
+                    <td>{{ order.passengerRating }}</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <th colspan="2">Unknown user</th>
+                </tr>
+            {% endif %}
 
-                    <script>
-                        const map = initializeMap('area-map', [{{ order.latCoordinateStart }}, {{ order.lngCoordinateStart }}])
+            {% if order.user %}
+                <tr>
+                    <td colspan="2"><h2>Driver</h2></td>
+                </tr>
+                <tr>
+                    <th>Name</th>
+                    <td><a href="{{ path('admin_driver_statistic', {'id': order.driver.id}) }}">{{ order.driver }}</a></td>
+                </tr>
+                <tr>
+                    <th>Email</th>
+                    <td><a href="mailto:{{ order.driver.user.email }}">{{ order.driver.user.email }}</a></td>
+                </tr>
+                <tr>
+                    <th>Phone number</th>
+                    <td><a href="tel:{{ order.driver.user.phoneNumber }}">{{ order.driver.user.phoneNumber }}</a></td>
+                </tr>
+                <tr>
+                    <th>Rating</th>
+                    <td>{{ order.driverRating }}</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <th colspan="2">Unknown driver</th>
+                </tr>
+            {% endif %}
 
-                        const startMarker = addMarker(map, {
-                            lat: {{ order.latCoordinateStart }},
-                            lng: {{ order.lngCoordinateStart }}
-                        }, 'user');
+            {% if (order.latCoordinateStart and order.lngCoordinateStart and order.latCoordinateDestination and order.lngCoordinateDestination) %}
+                <tr>
+                    <td colspan="2"><h2>Order map</h2></td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <div class="map" id="area-map"></div>
 
-                        const endMarker = addMarker(map, {
-                            lat: {{ order.latCoordinateDestination }},
-                            lng: {{ order.lngCoordinateDestination }}
-                        }, 'thumbtack');
-                    </script>
-                </td>
-            </tr>
+                        <script>
+                            const map = initializeMap('area-map', [{{ order.latCoordinateStart }}, {{ order.lngCoordinateStart }}])
+
+                            const startMarker = addMarker(map, {
+                                lat: {{ order.latCoordinateStart }},
+                                lng: {{ order.lngCoordinateStart }}
+                            }, 'user');
+
+                            const endMarker = addMarker(map, {
+                                lat: {{ order.latCoordinateDestination }},
+                                lng: {{ order.lngCoordinateDestination }}
+                            }, 'thumbtack');
+                        </script>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <th colspan="2">Unknown address</th>
+                </tr>
+            {% endif %}
         </tbody>
     </table>
 

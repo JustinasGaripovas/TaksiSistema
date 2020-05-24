@@ -21,6 +21,6 @@ class CommunicationService
 
     public function WriteLetterToEmail(string $email, string $content)
     {
-
+        echo 'SEND MAIL!';
     }
 }

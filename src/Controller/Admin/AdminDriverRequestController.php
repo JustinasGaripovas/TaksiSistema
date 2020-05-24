@@ -8,7 +8,6 @@ use App\Entity\User;
 use App\Repository\DriverRequestRepository;
 use App\Service\CommunicationService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -31,15 +30,14 @@ class AdminDriverRequestController extends AbstractController
 
     /**
      * @Route("/{id}/accept", name="admin_driver_request_accept")
-     * @param Request $request
      * @param DriverRequest $driverRequest
      * @param CommunicationService $communicationService
      * @return Response
      */
-    public function accept(Request $request, DriverRequest $driverRequest, CommunicationService $communicationService): Response
+    public function accept(DriverRequest $driverRequest, CommunicationService $communicationService): Response
     {
         /** @var User $user */
-        $user = $request->getUser();
+        $user = $driverRequest->getUser();
         if (!$user)
         {
             $this->addFlash('error', 'User not found!');
@@ -54,6 +52,10 @@ class AdminDriverRequestController extends AbstractController
 
         $driver = new Driver();
         $driver->setUser($user);
+        $driver->setCompleteOrderCount(0);
+        $driver->setUnfinishedOrderCount(0);
+        $driver->setAverageRating(0);
+        $driver->setDriverId($driverRequest->getDriverId());
 
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($driver);
@@ -68,15 +70,14 @@ class AdminDriverRequestController extends AbstractController
 
     /**
      * @Route("/{id}/deny", name="admin_driver_request_deny")
-     * @param Request $request
      * @param DriverRequest $driverRequest
      * @param CommunicationService $communicationService
      * @return Response
      */
-    public function deny(Request $request, DriverRequest $driverRequest, CommunicationService $communicationService): Response
+    public function deny(DriverRequest $driverRequest, CommunicationService $communicationService): Response
     {
         /** @var User $user */
-        $user = $request->getUser();
+        $user = $driverRequest->getUser();
         if (!$user)
         {
             $this->addFlash('error', 'User not found!');
