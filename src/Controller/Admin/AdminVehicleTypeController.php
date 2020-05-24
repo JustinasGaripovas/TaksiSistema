@@ -1,14 +1,10 @@
 <?php
 
-
 namespace App\Controller\Admin;
-
 
 use App\Entity\Discount;
 use App\Entity\VehicleType;
-use App\Form\DiscountType;
 use App\Form\VehicleTypeType;
-use App\Repository\DiscountRepository;
 use App\Repository\VehicleTypeRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
