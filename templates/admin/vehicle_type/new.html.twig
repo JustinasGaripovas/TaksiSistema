@@ -1,14 +1,14 @@
 {% extends 'admin/base.html.twig' %}
 
-{% block title %}Admin - Driver{% endblock %}
+{% block title %}Admin - Vehicle type{% endblock %}
+
+{% block body_title %}<h1>New vehicle type</h1>{% endblock %}
 
 {% block body_content %}
-
     {{ form_start(form) }}
     {{ form_widget(form) }}
     <button class="btn">{{ button_label|default('Save') }}</button>
     {{ form_end(form) }}
 
     <a href="{{ path('admin_vehicle_type_index') }}">Back</a>
-
 {% endblock %}

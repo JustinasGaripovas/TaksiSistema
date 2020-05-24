@@ -2,13 +2,13 @@
 
 {% block title %}Admin - Rate{% endblock %}
 
-{% block body_content %}
+{% block body_title %}<h1>New rate</h1>{% endblock %}
 
+{% block body_content %}
     {{ form_start(form) }}
     {{ form_widget(form) }}
     <button class="btn">{{ button_label|default('Save') }}</button>
     {{ form_end(form) }}
 
     <a href="{{ path('admin_rate_index') }}">Back</a>
-
 {% endblock %}

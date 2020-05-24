@@ -2,11 +2,10 @@
 
 {% block title %}Admin - Discounts{% endblock %}
 
+{% block body_title %}<h1>Discounts</h1>{% endblock %}
+
 {% block body_content %}
-    <h1>Discounts</h1>
-
     <button onclick="location.href='{{ path('admin_discount_new') }}'">New discount</button>
-
     <table class="table">
         <thead>
         <tr>

@@ -17,10 +17,9 @@
     </style>
 {% endblock %}
 
+{% block body_title %}<h1>View Order</h1>{% endblock %}
+
 {% block body_content %}
-
-    <h1>Order view</h1>
-
     <table class="table">
         <tbody>
             <tr>
@@ -99,5 +98,4 @@
     </table>
 
     <a href="{{ path('admin_order_index') }}">Back</a>
-
 {% endblock %}
