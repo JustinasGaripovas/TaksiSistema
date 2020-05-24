@@ -23,8 +23,6 @@ class DriverController extends AbstractController
 {
 
 
-
-
     /**
      * @Route("/pending", name="driver_pending_orders", methods={"GET"})
      */
@@ -57,7 +55,6 @@ class DriverController extends AbstractController
      */
     public function assignDriverStatus(Request $request): Response
     {
-
         $isWorking = $request->query->get('isWorking');
 
         /** @var User $user */
@@ -80,12 +77,16 @@ class DriverController extends AbstractController
      */
     public function assignOrderToDriver(DriverRepository $driverRepository, Order $order): Response
     {
-        //TODO: Get current user with is logged in instead of placing in mocked id
         /** @var Driver $driver */
-        $driver = $driverRepository->findBy(['id' => 1]);
+        $driver = $this->getUser()->getDriver();
 
-        //TODO: Validation to check if there is both order and driver
+        if (is_null($driver))
+        {
+            $this->$this->addFlash("danger", "User is not a driver");
+            return $this->redirectToRoute('driver_pending_orders');
+        }
 
+        $order->setDriver($driver);
         $order->setStatus(OrderStatusEnum::IN_PROGRESS);
         $this->getDoctrine()->getManager()->flush();
 
