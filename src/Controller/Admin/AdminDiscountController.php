@@ -43,6 +43,7 @@ class AdminDiscountController extends AbstractController
             $entityManager->persist($discount);
             $entityManager->flush();
 
+            $this->addFlash('success', 'New discount created.');
             return $this->redirectToRoute('admin_discount_index');
         }
 
@@ -64,6 +65,7 @@ class AdminDiscountController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($discount);
             $entityManager->flush();
+            $this->addFlash('success', 'Discount deleted.');
         }
 
         return $this->redirectToRoute('admin_discount_index');
@@ -83,6 +85,7 @@ class AdminDiscountController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
 
+            $this->addFlash('success', 'Discount edited.');
             return $this->redirectToRoute('admin_discount_index');
         }
 

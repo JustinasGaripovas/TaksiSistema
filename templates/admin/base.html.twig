@@ -38,14 +38,18 @@
 
     {% block error_flash_content %}
         {% for message in app.flashes('error') %}
-            <div class="alert alert-error">
-                {{ message }}
+            <div class="alert-container">
+                <div class="alert alert-error">
+                    {{ message }}
+                </div>
             </div>
         {% endfor %}
 
         {% for message in app.flashes('success') %}
-            <div class="alert alert-success">
-                {{ message }}
+            <div class="alert-container">
+                <div class="alert alert-success">
+                    {{ message }}
+                </div>
             </div>
         {% endfor %}
     {% endblock %}

@@ -62,6 +62,7 @@ class AdminDriverRequestController extends AbstractController
 
         $communicationService->WriteLetterToEmail($user->getEmail(), 'Your driver request successfully accepted!');
 
+        $this->addFlash('success', 'User accepted.');
         return $this->redirectToRoute('admin_driver_request_index');
     }
 
@@ -94,6 +95,7 @@ class AdminDriverRequestController extends AbstractController
 
         $communicationService->WriteLetterToEmail($user->getEmail(), 'Your driver request was denied!');
 
+        $this->addFlash('success', 'User denied.');
         return $this->redirectToRoute('admin_driver_request_index');
     }
 }

@@ -44,6 +44,7 @@ class AdminRateController extends AbstractController
             $entityManager->persist($rate);
             $entityManager->flush();
 
+            $this->addFlash('success', 'New rate created.');
             return $this->redirectToRoute('admin_rate_index');
         }
 
@@ -65,6 +66,7 @@ class AdminRateController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($rate);
             $entityManager->flush();
+            $this->addFlash('success', 'Rate deleted.');
         }
 
         return $this->redirectToRoute('admin_rate_index');
@@ -85,6 +87,7 @@ class AdminRateController extends AbstractController
         {
             $this->getDoctrine()->getManager()->flush();
 
+            $this->addFlash('success', 'Rate edited.');
             return $this->redirectToRoute('admin_rate_index');
         }
 
