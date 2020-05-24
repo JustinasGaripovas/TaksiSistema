@@ -31,13 +31,13 @@ class DriverController extends AbstractController
     public function pendingOrderIndex(Request $request, OrderRepository $orderRepository, EntityRadarService $entityRadarService): Response
     {
 
-        /** @var Driver $driver */
-        $driver = $this->getDoctrine()->getRepository(Driver::class)->find(1);
+        /** @var User $user */
+        $user = $this->getUser();
+        $driver = $user->getDriver();
 
         $orders = [];
 
         if ($driver->getIsWorking()) {
-
             $orders = $entityRadarService->getNearbyEntities([54.924293, 23.943115], Order::class, 'latCoordinateStart', 'lngCoordinateStart');
             $orders = array_filter($orders, function(Order $order) {
                 return $order->getStatus() == OrderStatusEnum::PENDING;

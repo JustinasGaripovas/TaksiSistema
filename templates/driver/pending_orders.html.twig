@@ -101,16 +101,12 @@
         takeLink.href = url
         takeLink.classList.add('take-order')
         takeLink.innerText = "Take"
-        marker = addMarker(map,{ lat: {{ order.latCoordinateStart }}, lng: {{ order.lngCoordinateStart }} },'user-clock')
+        marker = addMarker(map, {
+            lat: {{ order.latCoordinateStart }},
+            lng: {{ order.lngCoordinateStart }} }, 'user-clock')
         marker.bindPopup(takeLink);
-
-
-
-        {#);#}
         {% endfor %}
         {% endif %}
-
-
 
 
     </script>
