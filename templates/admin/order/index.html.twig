@@ -1,0 +1,56 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Admin - Orders{% endblock %}
+
+{% block body_content %}
+    <h1>Orders</h1>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>User</th>
+            <th>PassengerRating</th>
+            <th>Driver</th>
+            <th>DriverRating</th>
+            <th>Status</th>
+            <th>BasePrice</th>
+            <th>AdditionalPrice</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for order in orders %}
+            <tr>
+                <td>{{ order.id }}</td>
+                <td>{{ order.user }}</td>
+                <td>{{ order.passengerRating }}</td>
+                <td>{{ order.driver }}</td>
+                <td>{{ order.driverRating }}</td>
+                <td>
+                    {% if order.status == 0 %}
+                        Pending
+                    {% elseif order.status == 1 %}
+                        In Progress
+                    {% elseif order.status == 2 %}
+                        Finished
+                    {% elseif order.status == 3 %}
+                        Canceled
+                    {% else %}
+                        Unknown!
+                    {% endif %}
+                </td>
+                <td>{{ order.basePrice }}</td>
+                <td>{{ order.additionalPrice }}</td>
+                <td>
+                    <button onclick="location.href='{{ path('admin_order_view', {'id': order.id}) }}'">View</button>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
