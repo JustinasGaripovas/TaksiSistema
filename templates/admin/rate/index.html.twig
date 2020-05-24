@@ -29,7 +29,7 @@
                 <td>{{ rate.getVehicleType().name }}</td>
                 <td>
                     <button onclick="location.href='{{ path('admin_rate_edit', {'id': rate.id}) }}'">Edit</button>
-                    <form style="display: inline-block" method="post" action="{{ path('admin_rate_delete', {'id': rate.id}) }}" onsubmit="return confirm('Are you sure you want to delete this discount?');">
+                    <form style="display: inline-block" method="post" action="{{ path('admin_rate_delete', {'id': rate.id}) }}" onsubmit="return confirm('Are you sure you want to delete this vehicle rate?');">
                         <input type="hidden" name="_method" value="DELETE">
                         <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ rate.id) }}">
                         <button class="btn">Delete</button>
