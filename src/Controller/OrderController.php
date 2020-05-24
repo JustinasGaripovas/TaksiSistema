@@ -15,6 +15,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mercure\Publisher;
+use Symfony\Component\Mercure\Update;
 use Symfony\Component\Routing\Annotation\Route;
 
 
@@ -129,12 +131,21 @@ class OrderController extends AbstractController
     /**
      * @Route("/order/cancel/{id}", name="order_cancel", methods={"GET"})
      */
-    public function cancel(Order $order)
+    public function cancel(Order $order, Publisher $publisher)
     {
         $order->setStatus(OrderStatusEnum::CANCELED);
         $order->setBasePrice($this->recalculateOrderPrice($order));
 
         $this->getDoctrine()->getManager()->flush();
+
+        $url = $this->generateUrl('order_show', array('id' => 1));
+
+        $update = new Update(
+            $url,
+            json_encode(['status' => 'OutOfStock'])
+        );
+
+        $publisher($update);
 
         return $this->redirectToRoute('order_new');
     }

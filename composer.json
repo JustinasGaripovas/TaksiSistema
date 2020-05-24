@@ -29,7 +29,8 @@
         "symfony/validator": "5.0.*",
         "symfony/web-link": "5.0.*",
         "symfony/webpack-encore-bundle": "^1.7",
-        "symfony/yaml": "5.0.*"
+        "symfony/yaml": "5.0.*",
+      "ext-json": "*"
     },
     "require-dev": {
         "symfony/debug-pack": "*",
@@ -41,7 +42,10 @@
         "preferred-install": {
             "*": "dist"
         },
-        "sort-packages": true
+        "sort-packages": true,
+        "platform": {
+            "php": "7.4.5"
+        }
     },
     "autoload": {
         "psr-4": {
