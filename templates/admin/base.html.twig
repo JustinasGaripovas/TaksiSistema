@@ -5,6 +5,7 @@
 {% block body %}
     {% block admin_menu %}
         <ul>
+            <li><a href="{{ path('admin_order_index') }}">Orders</a></li>
             <li><a href="{{ path('admin_user_index') }}">Users</a></li>
             <li><a href="{{ path('admin_driver_index') }}">Drivers</a></li>
             <li style="padding-left: 10px"><a href="{{ path('admin_driver_index') }}">Requests</a></li>
