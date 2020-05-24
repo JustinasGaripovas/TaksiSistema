@@ -49,7 +49,7 @@ class Driver
     private $isWorking = false;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\User", inversedBy="driver", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\User", inversedBy="driver", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $user;
