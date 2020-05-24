@@ -29,7 +29,7 @@ class EntityRadarService
     }
 
 
-    public function GetNearbyEntities($location, $entityType, string $latAccessor = 'lat', string $lngAccessor = 'lng', int $maxDistance = 5000)
+    public function getNearbyEntities($location, $entityType, string $latAccessor = 'lat', string $lngAccessor = 'lng', int $maxDistance = 5000)
     {
 
         $responseArray = [];

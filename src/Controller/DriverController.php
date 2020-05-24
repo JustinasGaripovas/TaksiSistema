@@ -38,7 +38,7 @@ class DriverController extends AbstractController
 
         if ($driver->getIsWorking()) {
 
-            $orders = $entityRadarService->GetNearbyEntities([54.924293, 23.943115], Order::class, 'latCoordinateStart', 'lngCoordinateStart');
+            $orders = $entityRadarService->getNearbyEntities([54.924293, 23.943115], Order::class, 'latCoordinateStart', 'lngCoordinateStart');
             $orders = array_filter($orders, function(Order $order) {
                 return $order->getStatus() == OrderStatusEnum::PENDING;
             });
