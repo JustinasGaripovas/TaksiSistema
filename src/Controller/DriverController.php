@@ -4,10 +4,12 @@ namespace App\Controller;
 
 use App\Entity\Driver;
 use App\Entity\Order;
+use App\Entity\User;
 use App\Enum\OrderStatusEnum;
 use App\Form\DriverType;
 use App\Repository\DriverRepository;
 use App\Repository\OrderRepository;
+use App\Service\EntityRadarService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,18 +21,27 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class DriverController extends AbstractController
 {
+
+
+
+
     /**
      * @Route("/pending", name="driver_pending_orders", methods={"GET"})
      */
-    public function pendingOrderIndex(OrderRepository $orderRepository): Response
+    public function pendingOrderIndex(Request $request, OrderRepository $orderRepository, EntityRadarService $entityRadarService): Response
     {
+
         /** @var Driver $driver */
         $driver = $this->getDoctrine()->getRepository(Driver::class)->find(1);
 
         $orders = [];
 
         if ($driver->getIsWorking()) {
-            $orders = $orderRepository->findAllByStatus(OrderStatusEnum::PENDING);
+
+            $orders = $entityRadarService->getNearbyEntities([54.924293, 23.943115], Order::class, 'latCoordinateStart', 'lngCoordinateStart');
+            $orders = array_filter($orders, function(Order $order) {
+                return $order->getStatus() == OrderStatusEnum::PENDING;
+            });
         }
 
         return $this->render('driver/pending_orders.html.twig', [
@@ -39,31 +50,29 @@ class DriverController extends AbstractController
         ]);
     }
 
+
+
     /**
-     * @Route("/status/set", name="assign_status", methods={"GET"})
+     * @Route("/status/set", name="assign_driver_status", methods={"GET"})
      */
-    public function assignDriverStatus(Request $request, OrderRepository $orderRepository): Response
+    public function assignDriverStatus(Request $request): Response
     {
 
         $isWorking = $request->query->get('isWorking');
 
-        dump($isWorking);
+        /** @var User $user */
+        $user = $this->getUser();
 
-        $driver = $this->getDoctrine()->getRepository(Driver::class)->find(1);
-        $entityManager = $this->getDoctrine()->getManager();
+        if (is_null($user->getDriver())) {
+            $this->$this->addFlash("danger", "User is not a driver");
+            return $this->redirectToRoute('driver_pending_orders');
+        }
 
-        // tell Doctrine you want to (eventually) save the Product (no queries yet)
-        $entityManager->persist($driver);
+        $user->getDriver()->setIsWorking($isWorking == 'true' ? 1 : 0);
 
-        // actually executes the queries (i.e. the INSERT query)
-        $entityManager->flush();
+        $this->getDoctrine()->getManager()->flush();
 
-        $driver->setIsWorking($isWorking == 'true' ? 1 : 0);
-
-        return $this->render('driver/pending_orders.html.twig', [
-            'driver' => $driver,
-            'pendingOrders' => $orderRepository->findAllByStatus(OrderStatusEnum::PENDING),
-        ]);
+        return $this->redirectToRoute('driver_pending_orders');
     }
 
     /**
@@ -153,7 +162,7 @@ class DriverController extends AbstractController
      */
     public function delete(Request $request, Driver $driver): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$driver->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $driver->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($driver);
             $entityManager->flush();

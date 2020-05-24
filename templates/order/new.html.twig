@@ -3,7 +3,8 @@
 {% block title %}New Order{% endblock %}
 
 {% block scripts %}
-    <script src="/services/map/index.js"></script>
+    <script src="/services/map/mapManagement.js"></script>
+    <script src="/services/location/index.js"></script>
 {% endblock %}
 
 {% block stylesheets %}
@@ -23,7 +24,7 @@
             color: #333;
         }
 
-        #carTypeInput button{
+        #carTypeInput button {
             margin-top: 15px;
         }
 
@@ -31,12 +32,31 @@
             transition: all 0.3s ease-in;
         }
 
-        select{
+        select {
             width: 130px;
             height: 30px;
         }
+
         .hide {
             visibility: hidden;
+        }
+
+        button[type="submit"] {
+            width: 50%;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .selectionTypeControls {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 999;
+        }
+
+        .selectionTypeControls button.active{
+            background: white;
+            color: #333;
         }
     </style>
 
@@ -45,9 +65,13 @@
 {% block body %}
     <div id="new-order-container" class="container">
         <div class="map" id="area-map"></div>
+        <div class="selectionTypeControls">
+            <button >Your location</button>
+            <button class="active" >Your destination</button>
+        </div>
         <div id="content" class="content-container">
             <input id="locationInput" placeholder="Where are you going?" type="text"/>
-            <div id="carTypeInput" >
+            <div id="carTypeInput">
                 {{ include('order/_form.html.twig') }}
             </div>
         </div>
@@ -62,6 +86,31 @@
         const mapArea = document.getElementById("area-map")
         const locationInput = document.getElementById("locationInput")
         const carTypeInput = document.getElementById("carTypeInput")
+
+        let selectType = 'destination';
+        const selectionTypeControlsDOM = document.getElementsByClassName("selectionTypeControls")[0]
+
+        selectionTypeControlsDOM.children[0].addEventListener( 'click', () => {
+            selectType = 'start';
+            selectionTypeControlsDOM.children[0].classList.add('active')
+            selectionTypeControlsDOM.children[1].classList.remove('active')
+
+        })
+
+        selectionTypeControlsDOM.children[1].addEventListener( 'click', () => {
+            selectType = 'destination';
+            selectionTypeControlsDOM.children[1].classList.add('active')
+            selectionTypeControlsDOM.children[0].classList.remove('active')
+
+        })
+
+
+
+        function setSelectType (option){
+            selectType = option
+            this.parentNode.getChildren.forEach(el => el.classList.remove('active'))
+            this.classList.add('active')
+        }
 
         container.addEventListener("click", () => {
             newOrderContainer.classList.add("active")
@@ -79,23 +128,38 @@
 
         const map = initializeMap('area-map', [54.903914, 23.958851])
 
+        let startMarker = {}
+
         const setUserPosition = (pos) => {
             document.getElementById("order_latCoordinateStart").value = pos.lat
             document.getElementById("order_lngCoordinateStart").value = pos.lng
-            addMarker(map,pos,'box')
+            startMarker = addMarker(map, pos, 'user')
         }
         getCurrentDeviceLocation(setUserPosition)
 
 
-        const defaultDestination = {lat:54.904914, lng: 23.948851}
-        const destinationMarker = addMarker(map, defaultDestination,'thumbtack')
+        const defaultDestination = {lat: 54.904914, lng: 23.948851}
+        const destinationMarker = addMarker(map, defaultDestination, 'thumbtack')
         document.getElementById("order_latCoordinateDestination").value = defaultDestination.lat
         document.getElementById("order_lngCoordinateDestination").value = defaultDestination.lng
 
         map.on('click', (e) => {
-            document.getElementById("order_latCoordinateDestination").value = e.latlng.lat
-            document.getElementById("order_lngCoordinateDestination").value = e.latlng.lng
-            setMarkerLocation(destinationMarker,e.latlng)
+
+            switch (selectType) {
+
+                case 'start':
+                default:
+                    document.getElementById("order_latCoordinateStart").value = e.latlng.lat
+                    document.getElementById("order_lngCoordinateStart").value = e.latlng.lng
+                    setMarkerLocation(startMarker, e.latlng)
+                    break;
+                case 'destination':
+                    document.getElementById("order_latCoordinateDestination").value = e.latlng.lat
+                    document.getElementById("order_lngCoordinateDestination").value = e.latlng.lng
+                    setMarkerLocation(destinationMarker, e.latlng);
+                    break;
+            }
+
 
         });
 

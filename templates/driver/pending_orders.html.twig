@@ -3,7 +3,8 @@
 {% block title %}Pending orders{% endblock %}
 
 {% block scripts %}
-    <script src="/services/map/index.js"></script>
+    <script src="/services/map/mapManagement.js"></script>
+    <script src="/services/location/index.js"></script>
 {% endblock %}
 
 {% block stylesheets %}
@@ -59,8 +60,8 @@
 
         <div class="driver-activity">
             <p>Current status: <span id="current-status"></span></p>
-            <a href="{{ path("assign_status", {isWorking: 'true'}) }}">Start work</a>
-            <a href="{{ path("assign_status", {isWorking: 'false'}) }}">End work</a>
+            <a href="{{ path("assign_driver_status", {isWorking: 'true'}) }}">Start work</a>
+            <a href="{{ path("assign_driver_status", {isWorking: 'false'}) }}">End work</a>
         </div>
         <div id="content" class="content-container">
         </div>
@@ -80,6 +81,15 @@
 
         const map = initializeMap('area-map', [54.903914, 23.958851])
 
+
+        let driverMarker = {}
+
+        const setDriverPosition = (pos) => {
+            driverMarker = addMarker(map, pos, 'car')
+        }
+        getCurrentDeviceLocation(setDriverPosition)
+
+
         let url = ''
         let takeLink = ''
         let marker = {}
@@ -91,7 +101,7 @@
         takeLink.href = url
         takeLink.classList.add('take-order')
         takeLink.innerText = "Take"
-        marker = addMarker(map,{ lat: {{ order.latCoordinateDestination }}, lng: {{ order.lngCoordinateDestination }} },'user-clock')
+        marker = addMarker(map,{ lat: {{ order.latCoordinateStart }}, lng: {{ order.lngCoordinateStart }} },'user-clock')
         marker.bindPopup(takeLink);
 
 
