@@ -7,11 +7,12 @@ namespace App\Service;
 use App\Entity\Order;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Mercure\Publisher;
+use Symfony\Component\Mercure\PublisherInterface;
 use Symfony\Component\Mercure\Update;
 
 class NotificationService
 {
-    public function notify(string $topic, array $data, Publisher $publisher)
+    public function notify(string $topic, array $data, PublisherInterface $publisher)
     {
         try {
             $update = new Update(

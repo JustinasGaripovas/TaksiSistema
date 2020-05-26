@@ -75,7 +75,7 @@
 
         document.addEventListener("DOMContentLoaded", () => {
             const statusSpan = document.getElementById("current-status")
-            statusSpan.innerText = isWorking ? 'Currently working' : 'Not working'
+            statusSpan.innerText = isWorking ? 'Currently active' : 'Not active'
             statusSpan.classList.add(isWorking ? 'working' : 'off')
         })
 

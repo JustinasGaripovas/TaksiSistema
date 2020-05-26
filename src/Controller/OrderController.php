@@ -17,6 +17,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mercure\Publisher;
+use Symfony\Component\Mercure\PublisherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 
@@ -55,7 +56,8 @@ class OrderController extends AbstractController
     /**
      * @Route("/order/new", name="order_new", methods={"GET","POST"})
      */
-    public function new(Request $request, NotificationService $notificationService, Publisher $publisher): Response
+    public function new(Request $request, NotificationService $notificationService, PublisherInterface
+    $publisher): Response
     {
         $order = new Order();
         $form = $this->createForm(OrderType::class, $order);
@@ -149,12 +151,18 @@ class OrderController extends AbstractController
      */
     public function cancel(Order $order)
     {
-        $order->setStatus(OrderStatusEnum::CANCELED);
-        $order->setBasePrice($this->recalculateOrderPrice($order));
+        if (!is_null($order->getUser()))
+        {
+            $order->setStatus(OrderStatusEnum::CANCELED);
+            $order->setBasePrice($this->recalculateOrderPrice($order));
 
-        $this->getDoctrine()->getManager()->flush();
+            $this->getDoctrine()->getManager()->flush();
 
-        return $this->redirectToRoute('order_new');
+            return $this->redirectToRoute('order_show', ['id' => $order->getId()]);
+        }
+
+        $this->addFlash('danger', "Order has no user");
+        return $this->redirectToRoute('order_show', ['id' => $order->getId()]);
     }
 
 
@@ -166,7 +174,7 @@ class OrderController extends AbstractController
         $order->setStatus(OrderStatusEnum::FINISHED);
         $this->getDoctrine()->getManager()->flush();
 
-        return $this->redirectToRoute('order_new');
+        return $this->redirectToRoute('driver_pending_orders');
     }
 
 

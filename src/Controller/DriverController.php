@@ -16,6 +16,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mercure\Publisher;
+use Symfony\Component\Mercure\PublisherInterface;
 use Symfony\Component\Mercure\Update;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -43,8 +44,6 @@ class DriverController extends AbstractController
 
 
             $orders = $entityRadarService->getNearbyEntities([54.924293, 23.943115], Order::class, 'latCoordinateStart', 'lngCoordinateStart');
-
-
             $orders = array_filter($orders, function(Order $order) {
                 return $order->getStatus() == OrderStatusEnum::PENDING;
             });
@@ -86,12 +85,15 @@ class DriverController extends AbstractController
     /**
      * @Route("/assign/order/{id}", name="driver_assign_order", methods={"GET"})
      */
-    public function assignOrderToDriver(Order $order, NotificationService $notificationService, Publisher $publisher): Response
+    public function assignOrderToDriver(Order $order, NotificationService $notificationService, PublisherInterface $publisher): Response
     {
         /** @var User $user */
         $user = $this->getUser();
         /** @var Driver $driver */
         $driver = $user->getDriver();
+
+        //Checks if order is not already taken
+        if ( $order->getDriver() != null) return $this->redirectToRoute('driver_pending_orders');
 
         $order->setDriver($driver);
         $order->setStatus(OrderStatusEnum::IN_PROGRESS);

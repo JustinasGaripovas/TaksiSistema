@@ -67,8 +67,7 @@
 
 
         const onReceiveConfirmation = (res) => {
-            alert("A driver is coming your way")
-            console.log(res)
+            showNotification(res.status, 'success')
         };
 
 

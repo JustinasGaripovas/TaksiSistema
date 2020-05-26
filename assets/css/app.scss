@@ -15,8 +15,35 @@ body {
     width: 100vw;
     height: 100vh;
     overflow: hidden;
+    position: relative;
+
 }
 
+#notifications-container{
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 30%;
+    z-index: 9999;
+    span {
+        transform: translateY(-400px);
+        color: white;
+        width: 100%;
+        display: block;
+        background: rgba(0,0,0,0.5);
+        margin-top: 30px;
+        padding: 15px;
+        transition: transform 0.5s ease;
+        font-size: 14px;
+        &.success{
+            background: rgba(77, 255, 64,0.5);
+        }
+        &.open{
+            transform: translateY(0px);
+        }
+    }
+}
 .content-container{
     padding: 20px;
     position: relative;
