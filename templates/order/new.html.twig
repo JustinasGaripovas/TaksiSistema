@@ -128,12 +128,12 @@
 
         const map = initializeMap('area-map', [54.903914, 23.958851])
 
-        let startMarker = {}
+        let startMarker = addMarker(map, {lat: 54.703914, lng: 23.958851}, 'user')
 
         const setUserPosition = (pos) => {
             document.getElementById("order_latCoordinateStart").value = pos.lat
             document.getElementById("order_lngCoordinateStart").value = pos.lng
-            startMarker = addMarker(map, pos, 'user')
+            setMarkerLocation(startMarker, pos)
         }
         getCurrentDeviceLocation(setUserPosition)
 
