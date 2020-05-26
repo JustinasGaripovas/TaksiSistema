@@ -62,6 +62,7 @@ class OrderController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
             $order->setStatus(OrderStatusEnum::PENDING);
             $order->setBasePrice(1);
             $order->setBasePrice(1);
@@ -84,8 +85,8 @@ class OrderController extends AbstractController
                 ["status" => 'A new order has been created.',
                     'data' =>
                         [
-                            'lat' => $form['latCoordinateStart'],
-                            'lng' => $form['lngCoordinateStart'],
+                            'lat' => $order->getLatCoordinateStart(),
+                            'lng' =>  $order->getLngCoordinateStart(),
                             'id' => $order->getId()
                         ]
                 ], $publisher);
