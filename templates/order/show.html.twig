@@ -86,5 +86,16 @@
             lng: {{ order.lngCoordinateDestination }}}, 'thumbtack')
 
 
+
+        let routeMarker = addMarker(map,{lat:0,lng:0});
+
+        {#L.Routing.control({#}
+        {#    waypoints: [#}
+        {#        L.latLng({{ order.latCoordinateStart }},{{ order.lngCoordinateStart }}),#}
+        {#        L.latLng({{ order.latCoordinateDestination }}, {{ order.lngCoordinateDestination }})#}
+        {#    ],#}
+        {#    createMarker: () => routeMarker,#}
+        {#    routeWhileDragging: true#}
+        {#}).addTo(map);#}
     </script>
     {% endblock %}

@@ -158,7 +158,7 @@ class OrderController extends AbstractController
 
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('order_show', ['id' => $order->getId()]);
+            return $this->redirectToRoute('order_new');
         }
 
         $this->addFlash('danger', "Order has no user");
