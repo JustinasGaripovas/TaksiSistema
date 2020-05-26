@@ -11,10 +11,12 @@ use App\Form\EvaluateDriverType;
 use App\Form\OrderType;
 use App\Manager\UserManager;
 use App\Repository\OrderRepository;
+use App\Service\NotificationService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mercure\Publisher;
 use Symfony\Component\Routing\Annotation\Route;
 
 
@@ -31,8 +33,11 @@ class OrderController extends AbstractController
         /** @var Order $activeOrder */
         $activeOrder = $userManager->getCurrentOrder();
 
-        if(!is_null($activeOrder))
+        if (!is_null($activeOrder))
             return $this->redirectToRoute("order_show", ['id' => $activeOrder->getId()]);
+
+        if ($this->isGranted('ROLE_DRIVER'))
+            return $this->redirectToRoute("driver_pending_orders");
 
         return $this->redirectToRoute("order_new");
     }
@@ -50,7 +55,7 @@ class OrderController extends AbstractController
     /**
      * @Route("/order/new", name="order_new", methods={"GET","POST"})
      */
-    public function new(Request $request): Response
+    public function new(Request $request, NotificationService $notificationService, Publisher $publisher): Response
     {
         $order = new Order();
         $form = $this->createForm(OrderType::class, $order);
@@ -63,15 +68,27 @@ class OrderController extends AbstractController
             $order->setAdditionalPrice(1);
             $order->setDriverRating(1);
             $order->setPassengerRating(1);
-
+            $order->setUser($this->getUser());
             /** @var VehicleType $selectedCarType */
             $selectedCarType = $form['vehicleType']->getData();
+
+
 
             //TODO: Listener which calls itself
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($order);
             $entityManager->flush();
+
+            $notificationService->notify("pending/orders",
+                ["status" => 'A new order has been created.',
+                    'data' =>
+                        [
+                            'lat' => $form['latCoordinateStart'],
+                            'lng' => $form['lngCoordinateStart'],
+                            'id' => $order->getId()
+                        ]
+                ], $publisher);
 
             return $this->redirectToRoute("order_show", ['id' => $order->getId()]);
         }
@@ -117,7 +134,7 @@ class OrderController extends AbstractController
      */
     public function delete(Request $request, Order $order): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$order->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $order->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($order);
             $entityManager->flush();

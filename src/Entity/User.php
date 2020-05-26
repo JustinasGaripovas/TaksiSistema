@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -32,6 +34,23 @@ class User implements UserInterface
      * @ORM\JoinColumn(nullable=true)
      */
     private $admin;
+
+    /**
+     * @ORM\Column(type="array", nullable=true)
+     */
+    private $roles = [];
+
+//    /**
+//     * @ORM\OneToMany(targetEntity="App\Entity\Order", mappedBy="user")
+//     */
+//    private $orders;
+
+
+    public function __construct()
+    {
+        $this->roles = ['ROLE_USER'];
+        $this->orders = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -74,8 +93,7 @@ class User implements UserInterface
 
     public function getRoles()
     {
-        return ['ROLE_USER'];
-        // TODO: Implement getRoles() method.
+        return $this->roles;
     }
 
     public function getPassword()
@@ -101,4 +119,42 @@ class User implements UserInterface
     {
         // TODO: Implement eraseCredentials() method.
     }
+
+    public function setRoles(?array $roles): self
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }
+
+//    /**
+//     * @return Collection|Order[]
+//     */
+//    public function getOrders(): Collection
+//    {
+//        return $this->orders;
+//    }
+//
+//    public function addOrder(Order $order): self
+//    {
+//        if (!$this->orders->contains($order)) {
+//            $this->orders[] = $order;
+//            $order->setUser($this);
+//        }
+//
+//        return $this;
+//    }
+//
+//    public function removeOrder(Order $order): self
+//    {
+//        if ($this->orders->contains($order)) {
+//            $this->orders->removeElement($order);
+//            // set the owning side to null (unless already changed)
+//            if ($order->getUser() === $this) {
+//                $order->setUser(null);
+//            }
+//        }
+//
+//        return $this;
+//    }
 }

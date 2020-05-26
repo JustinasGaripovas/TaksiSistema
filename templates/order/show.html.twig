@@ -5,6 +5,7 @@
 {% block scripts %}
     <script src="/services/map/mapManagement.js"></script>
     <script src="/services/location/index.js"></script>
+    <script src="/services/notification.js"></script>
 {% endblock %}
 
 
@@ -51,16 +52,30 @@
     <div class="actions">
         {% if is_granted('ROLE_DRIVER') == true %}
             <a href="{{ path('order_finish', {'id': order.id}) }}">End order</a>
-            <a href="tel:{{ order.user.phone }}">Contact user</a>
+            <a href="tel:{{ order.user.phoneNumber }}">Contact user</a>
         {% endif %}
-        {% if is_granted('ROLE_USER') == false %}
-            <a href="">Rate driver</a>
-            <a href="tel:{{ order.driver.phone }}">Contact driver</a>
+        {% if is_granted('ROLE_USER') == true %}
+            {% if order.driver %}
+                <a href="">Rate driver</a>
+                <a href="tel:{{ order.driver.user.phoneNumber }}">Contact driver</a>
+            {% endif %}
             <a href="{{ path('order_cancel', {'id': order.id}) }}">Cancel order</a>
         {% endif %}
     </div>
 
     <script>
+
+
+        const onReceiveConfirmation = (res) => {
+            alert("A driver is coming your way")
+            console.log(res)
+        };
+
+
+        subscribeToTopic('order/{{ order.id}}', onReceiveConfirmation)
+
+
+
         const map = initializeMap('area-map', [{{ order.latCoordinateStart }}, {{ order.lngCoordinateStart }}])
 
         const startMarker = addMarker(map, {

@@ -8,6 +8,8 @@ use App\Entity\Driver;
 use App\Entity\Order;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\SerializerInterface;
 
@@ -36,14 +38,15 @@ class EntityRadarService
         $entityArray = $this->entityManager->getRepository($entityType)->findAll();
 
         foreach ($entityArray as $entity) {
-            $entityAsArray = $this->serializer->normalize($entity, null);
+            $entityAsArray = $this->serializer->normalize($entity, null, [AbstractNormalizer::ATTRIBUTES => [ $latAccessor, $lngAccessor ]]);
+
             if ($this->haversineGreatCircleDistance($location[0], $location[1], $entityAsArray[$latAccessor], $entityAsArray[$lngAccessor]) < $maxDistance) {
                 $responseArray[] = $entity;
             }
         }
 
-        return $responseArray;
 
+        return $responseArray;
 
     }
 

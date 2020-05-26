@@ -39,11 +39,6 @@ class Driver
     private $unfinishedOrderCount;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Order", mappedBy="driver")
-     */
-    private $orders;
-
-    /**
      * @ORM\Column(type="boolean", options={"default"=false}, nullable=false)
      */
     private $isWorking = false;
@@ -108,37 +103,6 @@ class Driver
     public function setUnfinishedOrderCount(int $unfinishedOrderCount): self
     {
         $this->unfinishedOrderCount = $unfinishedOrderCount;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Order[]
-     */
-    public function getOrders(): Collection
-    {
-        return $this->orders;
-    }
-
-    public function addOrder(Order $order): self
-    {
-        if (!$this->orders->contains($order)) {
-            $this->orders[] = $order;
-            $order->setDriver($this);
-        }
-
-        return $this;
-    }
-
-    public function removeOrder(Order $order): self
-    {
-        if ($this->orders->contains($order)) {
-            $this->orders->removeElement($order);
-            // set the owning side to null (unless already changed)
-            if ($order->getDriver() === $this) {
-                $order->setDriver(null);
-            }
-        }
 
         return $this;
     }

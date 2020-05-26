@@ -10,10 +10,13 @@ use App\Form\DriverType;
 use App\Repository\DriverRepository;
 use App\Repository\OrderRepository;
 use App\Service\EntityRadarService;
+use App\Service\NotificationService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mercure\Publisher;
+use Symfony\Component\Mercure\Update;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -21,9 +24,6 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class DriverController extends AbstractController
 {
-
-
-
 
     /**
      * @Route("/pending", name="driver_pending_orders", methods={"GET"})
@@ -35,13 +35,21 @@ class DriverController extends AbstractController
         $user = $this->getUser();
         $driver = $user->getDriver();
 
+
+
         $orders = [];
 
         if ($driver->getIsWorking()) {
+
+
             $orders = $entityRadarService->getNearbyEntities([54.924293, 23.943115], Order::class, 'latCoordinateStart', 'lngCoordinateStart');
+
+
             $orders = array_filter($orders, function(Order $order) {
                 return $order->getStatus() == OrderStatusEnum::PENDING;
             });
+
+
         }
 
         return $this->render('driver/pending_orders.html.twig', [
@@ -78,19 +86,22 @@ class DriverController extends AbstractController
     /**
      * @Route("/assign/order/{id}", name="driver_assign_order", methods={"GET"})
      */
-    public function assignOrderToDriver(DriverRepository $driverRepository, Order $order): Response
+    public function assignOrderToDriver(Order $order, NotificationService $notificationService, Publisher $publisher): Response
     {
-        //TODO: Get current user with is logged in instead of placing in mocked id
+        /** @var User $user */
+        $user = $this->getUser();
         /** @var Driver $driver */
-        $driver = $driverRepository->findBy(['id' => 1]);
+        $driver = $user->getDriver();
 
-        //TODO: Validation to check if there is both order and driver
-
+        $order->setDriver($driver);
         $order->setStatus(OrderStatusEnum::IN_PROGRESS);
         $this->getDoctrine()->getManager()->flush();
 
-        return $this->render('order/show.html.twig', [
-            'order' => $order,
+        $orderId = $order->getId();
+        $notificationService->notify("order/$orderId", ["status" => 'A driver has accepted Your request!'], $publisher);
+
+        return $this->redirectToRoute('order_show', [
+            'id' => $order->getId(),
         ]);
     }
 
@@ -115,6 +126,8 @@ class DriverController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
+            $driver->getUser()->setDriver($driver);
+            $driver->getUser()->setRoles(['ROLE_DRIVER']);
             $entityManager->persist($driver);
             $entityManager->flush();
 
